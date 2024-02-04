@@ -1,0 +1,43 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+    /* Estilo para el navbar */
+    .navbar {
+        -fx-background-color: #333;
+        -fx-padding: 10;
+    }
+
+    /* Estilo para los elementos del navbar */
+    .nav-button {
+        -fx-text-fill: white;
+        -fx-background-color: #555;
+        -fx-padding: 8;
+        -fx-border-width: 0;
+        -fx-cursor: hand;
+    }
+
+    /* Cambiar color al pasar el mouse sobre un elemento del navbar */
+    .nav-button:hover {
+        -fx-background-color: #777;
+    }
+
+    /* Estilo para el área superior (top) */
+    #top {
+        -fx-background-color: #f0554a;
+        -fx-padding: 10;
+    }
+
+    /* Estilo para el logo en el área superior */
+    #logo {
+        -fx-padding: 3;
+    }
+
+    /* Estilo para el texto en el área superior */
+    #systemTitle {
+        -fx-text-fill: white;
+        -fx-font-family: "Arial";
+        -fx-font-size: 30.0;
+    }
+}

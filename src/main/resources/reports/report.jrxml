@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.0.final using JasperReports Library version 6.21.0-4f56c4f36cd19e17675219a9ac4692d5f0f13b06  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="425" pageHeight="283" columnWidth="397" leftMargin="14" rightMargin="14" topMargin="14" bottomMargin="14" uuid="8484cebd-4f7d-4bf4-8b32-2aa64e58b2cd">
+	<property name="com.jaspersoft.studio.unit." value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="cm"/>
+	<parameter name="nroSocio" class="java.lang.String"/>
+	<parameter name="nombreTitular" class="java.lang.String"/>
+	<parameter name="direccion" class="java.lang.String"/>
+	<parameter name="periodo" class="java.lang.String"/>
+	<parameter name="categoria" class="java.lang.String"/>
+	<parameter name="importe" class="java.lang.String"/>
+	<parameter name="imageDir" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="80" y="-10" width="236" height="46" uuid="1dd76890-8319-412e-b211-00134a592705"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="16"/>
+				</textElement>
+				<text><![CDATA[Asociación Bomberos Voluntarios San Jerónimo Norte]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="-6" width="50" height="39" uuid="ef79b636-7e7f-4650-93a8-37832f4d7476"/>
+				<imageExpression><![CDATA[$P{imageDir} + "recibo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="140">
+			<staticText>
+				<reportElement x="0" y="10" width="68" height="20" uuid="764e1638-8052-4cdf-bcfd-7a67b6a17035"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[NRO. SOCIO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="10" width="150" height="20" uuid="a2300ce8-2d32-4b22-b39a-0fb4b08eb574"/>
+				<textFieldExpression><![CDATA[$P{nroSocio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="30" width="150" height="20" uuid="e8e35017-1e03-4b9d-9985-dba01a1f8ec1"/>
+				<textFieldExpression><![CDATA[$P{nombreTitular}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="30" width="64" height="20" uuid="fe43b48b-0fd8-4aeb-8362-54e7872635e3"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[TITULAR:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="68" height="20" uuid="07cda3d0-a998-45a9-a050-a2ad2d743e8f"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[DIRECCION:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="50" width="150" height="20" uuid="9834b180-c8b2-4a42-81c7-69e7a2c8567f"/>
+				<textFieldExpression><![CDATA[$P{direccion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="91" width="64" height="20" uuid="37896cb3-9abe-4acf-a483-9cd2b8964b50"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[PERIODO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="110" width="68" height="20" uuid="8d26ed83-d522-4439-8bb3-b9752f7e547f"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[CATEGORIA:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="110" width="150" height="20" uuid="7f2f613a-b27d-4796-941f-8ff586c33e84"/>
+				<textFieldExpression><![CDATA[$P{categoria}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="220" y="111" width="60" height="18" uuid="e4bfe990-d0ca-4961-865d-6e54e95be4ec"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[IMPORTE:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="280" y="111" width="70" height="19" uuid="98e16885-debb-4939-ae53-399b57fc7653"/>
+				<textFieldExpression><![CDATA[$P{importe}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-15" y="0" width="425" height="1" uuid="23313592-b347-4011-bf47-5957ce0fc91f"/>
+			</line>
+			<textField>
+				<reportElement x="70" y="93" width="104" height="18" uuid="4bc3e38d-025f-4318-b0d4-f63c0ff0692f"/>
+				<textFieldExpression><![CDATA[$P{periodo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<pageFooter>
+		<band height="43" splitType="Stretch">
+			<line>
+				<reportElement x="-14" y="0" width="425" height="1" uuid="96e3dc09-635a-4e1c-ae6c-1f31b6e6cbe2"/>
+			</line>
+			<staticText>
+				<reportElement x="60" y="5" width="270" height="38" uuid="81d38e81-14da-451f-9b1d-7cfbb15d9222"/>
+				<textElement textAlignment="Center">
+					<font size="13" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Gracias a su aporte, nuestra institución continua al servicio de la comunidad.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
