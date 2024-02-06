@@ -9,5 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface ICategoriaRepository extends JpaRepository<Categoria, Long>{
     @Query("SELECT c FROM categoria c WHERE c.nombre = ?1")
     public Categoria findByNombre(String nombre);
+    @Query("SELECT MAX(c.idCategoria) FROM categoria c")
+    public Long findLastId();
     
 }

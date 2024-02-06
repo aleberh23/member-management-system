@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ebernet.bomberos_socios.controller.VistaCategoriasController">
+   <top>
+      <HBox alignment="CENTER" prefHeight="78.0" prefWidth="939.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Categorias:">
+               <font>
+                  <Font name="Arial" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="590.0" prefWidth="412.0">
+               <children>
+                  <TableView fx:id="tableCategorias" prefHeight="540.0" prefWidth="462.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <columns>
+                        <TableColumn fx:id="colId" prefWidth="54.0" text="Id" />
+                        <TableColumn fx:id="colNombre" prefWidth="218.0" text="Nombre" />
+                        <TableColumn fx:id="colImporte" prefWidth="122.0" text="Importe" />
+                     </columns>
+                  </TableView>
+               </children>
+               <HBox.margin>
+                  <Insets bottom="50.0" left="20.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="590.0" prefWidth="520.0">
+               <HBox.margin>
+                  <Insets bottom="50.0" right="20.0" />
+               </HBox.margin>
+               <children>
+                  <VBox alignment="CENTER" prefHeight="154.0" prefWidth="504.0">
+                     <children>
+                        <Label fx:id="lblCatSelec" text="Categoria seleccionada:">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="30.0" top="130.0" />
+                           </VBox.margin>
+                        </Label>
+                        <VBox alignment="CENTER_LEFT" prefHeight="95.0" prefWidth="504.0">
+                           <VBox.margin>
+                              <Insets left="125.0" right="125.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label fx:id="lblIdCat" text="Id: ">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblNombreCat" text="Nombre:">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblImporte" text="Importe:">
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+                  <HBox alignment="CENTER" prefHeight="115.0" prefWidth="504.0">
+                     <children>
+                        <Button fx:id="btnEditarImp" mnemonicParsing="false" onAction="#editarImporte" prefHeight="38.0" prefWidth="96.0" text="Editar importe">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="btnNueva" mnemonicParsing="false" onAction="#nuevaCategoria" prefHeight="37.0" prefWidth="70.0" text="Nueva">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </center>
+</BorderPane>

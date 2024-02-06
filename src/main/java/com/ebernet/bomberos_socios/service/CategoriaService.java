@@ -21,6 +21,21 @@ public class CategoriaService implements ICategoriaService{
     public Categoria findByNombre(String nombre) {
         return caterep.findByNombre(nombre);
     }
+
+    @Override
+    public Categoria findById(Long id) {
+        return caterep.findById(id).orElse(null);
+    }
+
+    @Override
+    public Long findLastId() {
+        return caterep.findLastId();
+    }
+
+    @Override
+    public void save(Categoria cat) {
+        caterep.save(cat);
+    }
     
     
 }

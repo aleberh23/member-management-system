@@ -41,4 +41,10 @@ public interface ISocioTitularRepository extends JpaRepository<SocioTitular, Lon
             + "d.calle, d.nro)) "
             +  "LIKE %?1% AND st.baja = ?2")
     public Long countByFilter(String filtro, boolean baja);
+    
+    @Query("SELECT st FROM socio_titular st WHERE YEAR(st.fechaIngreso) = ?1")  
+    public List<SocioTitular> findAllByAnioIngreso(int anio);
+    
+    @Query("SELECT MAX(st.nroSocio) FROM socio_titular st")
+    public long getLastNroSocio();
 }

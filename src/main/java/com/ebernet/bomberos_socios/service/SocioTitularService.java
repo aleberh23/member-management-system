@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page; 
+import org.springframework.data.domain.Sort;
 
 @Service
 public class SocioTitularService implements ISocioTitularService{
@@ -51,7 +52,7 @@ public class SocioTitularService implements ISocioTitularService{
 
     @Override
     public List<SocioTitular> findAllSociosTitulares() {
-        return sociotitrep.findAll();
+        return sociotitrep.findAll(Sort.by("nroSocio"));
     }
 
     @Override
@@ -61,14 +62,14 @@ public class SocioTitularService implements ISocioTitularService{
 
     @Override
     public Page<SocioTitular> findAllSociosTitulares(int page, int size) {
-        Pageable paging = PageRequest.of(page, size);
+        Pageable paging = PageRequest.of(page, size, Sort.by("nroSocio"));
   
         return sociotitrep.findAll(paging);
     }
 
     @Override
     public Page<SocioTitular> findByFilter(String filterText, boolean deBaja, int page, int size) {
-        Pageable paging = PageRequest.of(page, size); 
+        Pageable paging = PageRequest.of(page, size, Sort.by("nroSocio")); 
         return sociotitrep.findByFilter(filterText, deBaja, paging);
     }
 
@@ -80,6 +81,16 @@ public class SocioTitularService implements ISocioTitularService{
     @Override
     public List<SocioTitular> findAllSociosTitularesActivos() {
         return sociotitrep.findAllActivos();
+    }
+
+    @Override
+    public List<SocioTitular> findAllSociosTitularesByAnioIngreso(int anio) {
+        return sociotitrep.findAllByAnioIngreso(anio);
+    }
+
+    @Override
+    public long getLastNroSocio() {
+        return sociotitrep.getLastNroSocio();
     }
             
     

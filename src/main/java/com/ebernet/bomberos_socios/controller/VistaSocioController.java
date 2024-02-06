@@ -127,6 +127,7 @@ public class VistaSocioController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             // Establecer la modality para bloquear la ventana principal
+            stage.getIcons().add(new javafx.scene.image.Image("/img/logo_sistema.png"));  // Reemplaza con la ruta correcta al ícono
             stage.initModality(Modality.APPLICATION_MODAL); // O Modality.WINDOW_MODAL
             controller.initData(socioSeleccionado);
             stage.showAndWait();
@@ -151,6 +152,7 @@ public class VistaSocioController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             // Establecer la modality para bloquear la ventana principal
+            stage.getIcons().add(new javafx.scene.image.Image("/img/logo_sistema.png"));  // Reemplaza con la ruta correcta al ícono
             stage.initModality(Modality.APPLICATION_MODAL); // O Modality.WINDOW_MODAL
             stage.showAndWait();
         } catch (IOException ex) {
@@ -184,6 +186,7 @@ public class VistaSocioController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             // Establecer la modality para bloquear la ventana principal
+            stage.getIcons().add(new javafx.scene.image.Image("/img/logo_sistema.png"));  // Reemplaza con la ruta correcta al ícono
             stage.initModality(Modality.APPLICATION_MODAL); // O Modality.WINDOW_MODAL
             //iniciar data dandole el socio a dar de baja.
             controller.initData(socioSeleccionado);
@@ -211,6 +214,7 @@ public class VistaSocioController implements Initializable {
             // Establecer la modality para bloquear la ventana principal
             stage.initModality(Modality.APPLICATION_MODAL); // O Modality.WINDOW_MODAL
             //iniciar data dandole el socio a dar de baja.
+            stage.getIcons().add(new javafx.scene.image.Image("/img/logo_sistema.png"));  // Reemplaza con la ruta correcta al ícono
             controller.initData(socioSeleccionado);
             stage.showAndWait();
             handleFilterChange();

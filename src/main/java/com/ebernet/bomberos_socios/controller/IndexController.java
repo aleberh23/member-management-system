@@ -64,6 +64,11 @@ public class IndexController implements Initializable {
     }
     
     @FXML
+    private void categorias(){
+    loadView("/fxml/vistaCategorias.fxml");
+    }
+    
+    @FXML
     private void cargarSocio() {
         loadView("/fxml/cargaSocio.fxml");
         CargaSocioController controller = context.getBean(CargaSocioController.class);
@@ -160,9 +165,14 @@ public class IndexController implements Initializable {
         //se carga la vista
         loadView("/fxml/editarDeuda.fxml");
         //se obtiene el objeto EditarDeudaControler gracias a el application context (Gracias SPRING!!!)
-       EditarDeudaController controller = context.getBean(EditarDeudaController.class);
+        EditarDeudaController controller = context.getBean(EditarDeudaController.class);
         //se le setea al controlador el objeto socio el cual se quiere ver detalle
         controller.initData(deuda);
+    }
+    
+    @FXML
+    private void libroJuridico(){
+        loadView("/fxml/libroJuridico.fxml");
     }
 
     private void loadView(String view) {

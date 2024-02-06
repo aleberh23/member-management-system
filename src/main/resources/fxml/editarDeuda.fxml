@@ -16,7 +16,7 @@
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="405.0" prefWidth="567.0">
          <children>
-            <Label text="Carga de deuda:">
+            <Label text="Editar deuda:">
                <font>
                   <Font name="Arial" size="23.0" />
                </font>

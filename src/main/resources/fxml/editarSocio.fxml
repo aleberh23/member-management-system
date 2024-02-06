@@ -37,7 +37,7 @@
                               <Font name="Arial" size="12.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="txtNombre" promptText="Carlos David Juarez">
+                        <TextField fx:id="txtNombre" promptText="JUAREZ CARLOS DAVID">
                            <VBox.margin>
                               <Insets top="2.0" />
                            </VBox.margin>
@@ -168,7 +168,7 @@
                               <Insets top="24.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="txtCalle" promptText="San Martin">
+                        <TextField fx:id="txtCalle" promptText="SAN MARTIN">
                            <VBox.margin>
                               <Insets top="2.0" />
                            </VBox.margin>

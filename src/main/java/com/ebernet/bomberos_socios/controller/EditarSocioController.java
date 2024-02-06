@@ -173,10 +173,6 @@ public class EditarSocioController implements Initializable {
     // Método para validar que solo se ingresen letras y limitar el máximo a 25 caracteres
     private void validarCalle() {
         String texto = txtCalle.getText();
-        if (!texto.matches("[a-zA-Z\\s]*")) {  // Verificar que solo contiene letras y/o espacios
-            txtCalle.setText(texto.replaceAll("[^a-zA-Z\\s]", ""));  // Eliminar caracteres no alfabéticos
-        }
-
         // Limitar la longitud a 25 caracteres
         if (texto.length() > 25) {
             txtCalle.setText(texto.substring(0, 25));

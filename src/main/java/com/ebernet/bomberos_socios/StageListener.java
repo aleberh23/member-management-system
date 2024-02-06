@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,12 +20,16 @@ public class StageListener implements ApplicationListener<StageReadyEvent>{
 
     private final String appTitle;
     private final Resource fxml;
+    private final Resource icon; 
     private final ApplicationContext ac;
 
     StageListener(@Value("${spring.application.ui.title}")String appTitle,
-                  @Value("${classpath:/fxml/index.fxml}") Resource resource, ApplicationContext ac) {
+                  @Value("${classpath:/fxml/login.fxml}") Resource resource,
+                  @Value("${classpath:/img/logo_sistema.png}") Resource icon,
+                  ApplicationContext ac) {
         this.appTitle = appTitle;
         this.fxml = resource;
+        this.icon = icon;
         this.ac = ac;
     }
     
@@ -35,10 +40,14 @@ public class StageListener implements ApplicationListener<StageReadyEvent>{
         try {
             Stage stage = event.getStage();
             URL url = this.fxml.getURL();
+            // Cargar el ícono de la aplicación
+            Image appIcon = new Image(icon.getInputStream());
+            stage.getIcons().add(appIcon);
+            
             FXMLLoader fxmlLoader = new FXMLLoader(url);
             fxmlLoader.setControllerFactory(ac::getBean);
             Parent root = fxmlLoader.load();
-            Scene scene = new Scene(root, 1129, 914);
+            Scene scene = new Scene(root, 913, 531);
             stage.setScene(scene);
             stage.setTitle(appTitle);
             stage.setResizable(false);

@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -68,25 +70,44 @@ public class ImprimirRecibosController implements Initializable {
 
     @FXML
     private void generarRecibos() {
-        // Obtiene la ruta del directorio de inicio del usuario
-        String userHome = System.getProperty("user.home");
-        // Construye la ruta completa al escritorio del usuario
-        Path desktopPath = Paths.get(userHome, "Desktop");
-        // Crea la carpeta "Recibos BOMBEROS" en el escritorio
-        Path recibosBomberosPath = desktopPath.resolve("Recibos BOMBEROS");
-        if (!Files.exists(recibosBomberosPath)) {
+        String appData = System.getenv("APPDATA");
+        Path appFolderPath = Paths.get(appData, "bomberos_socios");
+        Path recibosBomberosPath = appFolderPath.resolve("Recibos BOMBEROS");
+
+        if (!Files.exists(appFolderPath)) {
+            try {
+                Files.createDirectory(appFolderPath);
+                Files.createDirectory(recibosBomberosPath);
+                System.out.println("Carpeta de la aplicación creada en: " + appFolderPath);
+            } catch (Exception e) {
+                // Mostrar la alerta de error
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Error");
+                alerta.setHeaderText("¡Error!");
+                alerta.setContentText("Hubo un error al generar la carpeta " + appFolderPath.toString() + " " + e.getCause() + " " + e.getMessage());
+                alerta.showAndWait();
+                System.err.println("Error al crear la carpeta 'Recibos BOMBEROS': " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else if (!Files.exists(recibosBomberosPath)){
             try {
                 Files.createDirectory(recibosBomberosPath);
-                System.out.println("Carpeta 'Recibos BOMBEROS' creada en: " + recibosBomberosPath);
-            } catch (Exception e) {
-                System.err.println("Error al crear la carpeta 'Recibos BOMBEROS': " + e.getMessage());
-                return;
+            } catch (IOException ex) {
+                Alert alerta = new Alert(Alert.AlertType.ERROR);
+                alerta.setTitle("Error");
+                alerta.setHeaderText("¡Error!");
+                alerta.setContentText("Hubo un error al generar la carpeta " + recibosBomberosPath.toString() + " " + ex.getCause() + " " + ex.getMessage());
+                alerta.showAndWait();
+                System.err.println("Error al crear la carpeta 'Recibos BOMBEROS': " + ex.getMessage());
+                ex.printStackTrace();
             }
+        }else{
+             System.out.println("La carpeta de la aplicación ya existe en: " + recibosBomberosPath);
         }
         // Ruta del archivo jrxml en el paquete "reports"
         String jrxmlFilePath = "/reports/report.jrxml";
         // Directorio donde se guardarán los reportes
-        String outputDirectory = System.getProperty("user.home") + "/Desktop/Recibos BOMBEROS/";
+        String outputDirectory = recibosBomberosPath.toString()+"/";
         // Crea una lista de recibosDTO a partir de la lista de socios objeto
         List<SocioTitular> sociostit = sociotitser.findAllSociosTitularesActivos();
         List<ReciboDTO> recibos = new ArrayList<ReciboDTO>();

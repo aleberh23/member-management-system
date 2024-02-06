@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="668.0" prefWidth="939.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ebernet.bomberos_socios.controller.LibroJuridicoController">
+   <top>
+      <HBox alignment="CENTER" prefHeight="90.0" prefWidth="939.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Libro Juridico">
+               <font>
+                  <Font name="Arial" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="CENTER" prefHeight="0.0" prefWidth="939.0" />
+            <ScrollPane prefHeight="344.0" prefWidth="889.0">
+               <content>
+                  <VBox prefHeight="343.0" prefWidth="929.0">
+                     <children>
+                        <TableView fx:id="tblSocios" prefHeight="479.0" prefWidth="929.0">
+                          <columns>
+                            <TableColumn fx:id="colNombre" editable="false" prefWidth="186.0" text="Nombre Completo" />
+                              <TableColumn fx:id="colDoc" editable="false" minWidth="0.0" prefWidth="219.0" text="Documento" />
+                              <TableColumn fx:id="colFDIng" editable="false" minWidth="0.0" prefWidth="194.0" text="F. de Ingreso" />
+                              <TableColumn fx:id="colLocalidad" editable="false" minWidth="0.0" prefWidth="270.0" text="Localidad" />
+                          </columns>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </content>
+               <VBox.margin>
+                  <Insets left="25.0" right="25.0" top="15.0" />
+               </VBox.margin>
+            </ScrollPane>
+            <VBox alignment="CENTER_RIGHT" prefHeight="58.0" prefWidth="939.0">
+               <children>
+                  <Pagination fx:id="pagination" prefHeight="136.0" prefWidth="939.0" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <VBox alignment="TOP_CENTER" prefHeight="152.0" prefWidth="939.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="939.0">
+               <children>
+                  <Button fx:id="btnGenerarPdfAnio" mnemonicParsing="false" onAction="#generarPdfAnio" prefHeight="35.0" prefWidth="143.0" text="Generar PDF por año">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnGenerarPdf" mnemonicParsing="false" onAction="#generarPdf" prefHeight="35.0" prefWidth="106.0" text="Generar PDF">
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </bottom>
+</BorderPane>

@@ -17,8 +17,8 @@
                <Insets top="15.0" />
             </VBox.margin></Button>
             <Button onAction="#verSocio" prefHeight="25.0" prefWidth="86.0" styleClass="nav-button" text="Vista Socios" />
-         <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" styleClass="nav-button" text="Libro Juridico" />
-         <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="92.0" styleClass="nav-button" text="Categorias" />
+         <Button mnemonicParsing="false" onAction="#libroJuridico" prefHeight="25.0" prefWidth="90.0" styleClass="nav-button" text="Libro Juridico" />
+         <Button mnemonicParsing="false" onAction="#categorias" prefHeight="25.0" prefWidth="92.0" styleClass="nav-button" text="Categorias" />
          <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" styleClass="nav-button" text="Cobradores" />
         </VBox>
     </left>

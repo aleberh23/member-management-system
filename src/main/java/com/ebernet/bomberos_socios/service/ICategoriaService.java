@@ -7,5 +7,8 @@ public interface ICategoriaService {
     
     public List<Categoria> findAllCategorias();
     public Categoria findByNombre(String nombre);
+    public Categoria findById(Long id);
+    public Long findLastId();
+    public void save(Categoria cat);
     
 }

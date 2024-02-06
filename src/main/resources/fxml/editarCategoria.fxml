@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="253.0" prefWidth="506.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ebernet.bomberos_socios.controller.EditarCategoriaController">
+   <children>
+      <Label fx:id="lblTitulo" layoutX="14.0" layoutY="14.0" prefHeight="60.0" prefWidth="470.0" text="Editar categoria ID:">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="85.0" fitWidth="99.0" layoutX="373.0" layoutY="92.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/categoria.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="btnGuardar" layoutX="415.0" layoutY="204.0" mnemonicParsing="false" onAction="#guardarCategoria" prefHeight="35.0" prefWidth="68.0" text="Guardar" />
+      <Line endX="405.0" layoutX="101.0" layoutY="73.0" startX="-100.0" />
+      <Button fx:id="btnCancelar" layoutX="338.0" layoutY="204.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="35.0" prefWidth="68.0" text="Cancelar" />
+      <Label layoutX="31.0" layoutY="92.0" text="Nombre:">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="162.0" text="Importe:">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtNombre" editable="false" layoutX="31.0" layoutY="109.0" prefHeight="35.0" prefWidth="224.0" promptText="Categoria" />
+      <TextField fx:id="txtImporte" layoutX="31.0" layoutY="177.0" prefHeight="35.0" prefWidth="224.0" promptText="\$" />
+   </children>
+</AnchorPane>
