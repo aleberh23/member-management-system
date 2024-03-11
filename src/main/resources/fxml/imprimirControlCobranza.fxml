@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="253.0" prefWidth="506.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="com.ebernet.bomberos_socios.controller.ImprimirControlCobranzaController">
+    <stylesheets>
+        <URL value="@/styles/imprimircontrolcobranza.css" />
+    </stylesheets>
+   <children>
+      <Label fx:id="lblTitulo" layoutX="18.0" layoutY="14.0" prefHeight="60.0" prefWidth="470.0" text="Generar control de cobranza:">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Label>
+      <Line endX="405.0" layoutX="101.0" layoutY="73.0" startX="-100.0" />
+      <ImageView fitHeight="85.0" fitWidth="99.0" layoutX="378.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/control_cobr.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="37.0" layoutY="145.0" text="Seleccione año:">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="cmbxAnio" layoutX="37.0" layoutY="160.0" prefHeight="25.0" prefWidth="249.0" promptText="Seleccione uno.." />
+      <Label layoutX="37.0" layoutY="95.0" text="Cobrador:">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtCobrador" editable="false" layoutX="37.0" layoutY="110.0" prefHeight="25.0" prefWidth="249.0" />
+      <Button fx:id="btnGenerar" layoutX="420.0" layoutY="204.0" mnemonicParsing="false" onAction="#generar" prefHeight="35.0" prefWidth="68.0" text="Generar" />
+      <Button fx:id="btnCancelar" layoutX="343.0" layoutY="204.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="35.0" prefWidth="68.0" text="Cancelar" />
+   </children>
+</AnchorPane>

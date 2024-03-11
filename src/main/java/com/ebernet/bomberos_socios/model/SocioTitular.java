@@ -34,6 +34,8 @@ public class SocioTitular {
     private TipoDocumento tipoDoc;
     @Column(name="nro_documento")
     private Long nroDocumento;
+    @Column(name="cuil")
+    private Long nroCuil;
     @Column(name="fecha_nacimiento")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate fechaNacimiento;

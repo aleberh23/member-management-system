@@ -80,9 +80,8 @@ public class VistaDeudasSocioController implements Initializable {
             // El usuario seleccionó "Sí", se realiza el pago de la deuda
             deudaselec.setPaga(true);
             deudaser.saveDeuda(deudaselec);
-            recargarTablaDeudas();
-
         }
+        recargarTablaDeudas();
     }
 
     @FXML
@@ -200,10 +199,17 @@ public class VistaDeudasSocioController implements Initializable {
         // Cargar deudas del socio
         List<Deuda> deudas = deudaser.findByAllBySocioTitular(socio.getNroSocio());
 
-        // Convertir a wrappers
-        List<DeudaWrapper> wrappers = deudas.stream()
-                .map(DeudaWrapper::new)
-                .collect(Collectors.toList());
+       List<DeudaWrapper> wrappers = deudas.stream()
+        .map(DeudaWrapper::new)
+        .sorted((w1, w2) -> {
+            boolean pagaNo1 = w1.pagaProperty().equals("No");
+            boolean pagaNo2 = w2.pagaProperty().equals("No");
+
+            // Orden descendente por "pagaProperty" igual a "No"
+            return Boolean.compare(pagaNo2, pagaNo1);
+        })
+        .collect(Collectors.toList());
+
 
         //convertir a hashmap
         this.deudas = (HashMap<Long, Deuda>) deudas.stream()
@@ -255,10 +261,17 @@ public class VistaDeudasSocioController implements Initializable {
         // Vuelve a cargar los datos de las deudas desde la base de datos
         List<Deuda> deudas = deudaser.findByAllBySocioTitular(socio.getNroSocio());
 
-        // Convierte a wrappers
         List<DeudaWrapper> wrappers = deudas.stream()
-                .map(DeudaWrapper::new)
-                .collect(Collectors.toList());
+        .map(DeudaWrapper::new)
+        .sorted((w1, w2) -> {
+            boolean pagaNo1 = w1.pagaProperty().equals("No");
+            boolean pagaNo2 = w2.pagaProperty().equals("No");
+
+            // Orden descendente por "pagaProperty" igual a "No"
+            return Boolean.compare(pagaNo2, pagaNo1);
+        })
+        .collect(Collectors.toList());
+
 
         // Mapeo de columnas
         colAnio.setCellValueFactory(cell -> cell.getValue().anioProperty());

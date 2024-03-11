@@ -10,8 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SocioTitularDTO {
+    private String nroSocio;
     private String nombreCompleto;
     private String nroDocumento;
     private String fechaIngreso;
     private String localidad;    
+    private String nroCuil;
 }

@@ -1,6 +1,7 @@
 package com.ebernet.bomberos_socios.repository;
 
 import com.ebernet.bomberos_socios.model.SocioTitular;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -47,4 +48,7 @@ public interface ISocioTitularRepository extends JpaRepository<SocioTitular, Lon
     
     @Query("SELECT MAX(st.nroSocio) FROM socio_titular st")
     public long getLastNroSocio();
+        
+    @Query("SELECT st FROM socio_titular st WHERE st.cobrador.id = ?1 AND st.fechaIngreso < ?2 AND st.baja = false")
+    public List<SocioTitular> findByCobrador(Long idCobrador, LocalDate fechaFin);
 }

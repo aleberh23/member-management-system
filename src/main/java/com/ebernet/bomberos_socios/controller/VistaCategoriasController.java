@@ -6,6 +6,7 @@ import com.ebernet.bomberos_socios.ui.CategoriaWrapper;
 import com.ebernet.bomberos_socios.ui.SocioTitularWrapper;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -88,7 +89,7 @@ public class VistaCategoriasController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             // Establecer la modality para bloquear la ventana principal
-            stage.getIcons().add(new javafx.scene.image.Image("/img/logo_sistema.png"));  // Reemplaza con la ruta correcta al ícono
+            stage.getIcons().add(new javafx.scene.image.Image("/img/logo_sistema.png"));
             stage.initModality(Modality.APPLICATION_MODAL); // O Modality.WINDOW_MODAL
             stage.showAndWait();
         } catch (IOException ex) {
@@ -119,6 +120,8 @@ public class VistaCategoriasController implements Initializable {
         lblImporte.setDisable(true);
         lblNombreCat.setDisable(true);
         List<Categoria> categorias = catser.findAllCategorias();
+        //ordenar de menor a mayor
+        Collections.sort(categorias, (c1, c2) -> Long.compare(c1.getIdCategoria(), c2.getIdCategoria()));
         // Convertir a wrappers
         List<CategoriaWrapper> wrappers = categorias.stream()
                 .map(CategoriaWrapper::new)

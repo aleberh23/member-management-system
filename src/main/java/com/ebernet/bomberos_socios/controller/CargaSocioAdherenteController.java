@@ -204,40 +204,6 @@ public class CargaSocioAdherenteController implements Initializable {
         socio.setVinculo(cmbxVinculo.getValue());
         //setear el socio titular al adherente
         socio.setSocioTitular(sociotit);
-        //alertas de cambio de categoria.
-        // Obtén la fecha actual
-        LocalDate fechaActual = LocalDate.now();
-        // Calcula la diferencia en años
-        int diferenciaEnAnios = Period.between(fechaNacimiento.getValue(), fechaActual).getYears();
-        System.out.println("Diferencia en años: "+diferenciaEnAnios 
-                +"\nVinculo: "+socio.getVinculo().getNombre()
-                +"\nTiene socios mayores: "+!socioadhser.tieneSociosMayores(sociotit.getNroSocio()));
-        if (diferenciaEnAnios >= 18 && socio.getVinculo().getNombre().equals("Hijo/a") && !socioadhser.tieneSociosMayores(sociotit.getNroSocio())) {
-            // El socio adherente es de vinculo "Hijo/a", es mayor a 18 años y el socio titular no tiene otros socios adherentes mayores.
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Cambio de Categoría");
-            alert.setHeaderText("El socio adherente es mayor a 18 años.");
-            alert.setContentText("La categoria actual del socio es " + sociotit.getCategoria().getNombre()
-                    + "¿Desea cambiar la categoría del socio titular a \"Grupo Familiar (mayores)\"?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                // El usuario seleccionó "Sí", realiza el cambio de categoría aquí
-                sociotit.setCategoria(categoriaser.findByNombre("Grupo Familiar (mayores)"));
-                sociotitser.createSocioTitular(sociotit);
-            }
-        } else if (!sociotit.getCategoria().getNombre().equals("Grupo Familiar (menores)") && !socioadhser.tieneSocios(sociotit.getNroSocio())) {
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Cambio de Categoría");
-            alert.setHeaderText("El socio titular tiene un nuevo socio adherente");
-            alert.setContentText("La categoria actual del socio es " + sociotit.getCategoria().getNombre()
-                    + "¿Desea cambiar la categoría del socio titular a \"Grupo Familiar (menores)\"?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                // El usuario seleccionó "Sí", realiza el cambio de categoría aquí
-                sociotit.setCategoria(categoriaser.findByNombre("Grupo Familiar (menores)"));
-                sociotitser.createSocioTitular(sociotit);
-            }
-        }
         //guardar en la base de datos
         socioadhser.saveSocioAdherente(socio);
         //volver a vista de socios adherentes

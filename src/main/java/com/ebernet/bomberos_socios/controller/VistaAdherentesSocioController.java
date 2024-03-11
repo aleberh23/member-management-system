@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -29,9 +31,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -115,11 +119,23 @@ public class VistaAdherentesSocioController implements Initializable {
     public void recargarTablaSociosAdherentes() {
         // Vuelve a cargar los datos de los socios adherentes desde la base de datos
         List<SocioAdherente> sociosAdherentes = socioadhser.findAllByIdTitular(socio.getNroSocio());
+        
 
-        // Convierte a wrappers
-        List<SocioAdherenteWrapper> wrappers = sociosAdherentes.stream()
-                .map(SocioAdherenteWrapper::new)
-                .collect(Collectors.toList());
+        
+       List<SocioAdherenteWrapper> wrappers = sociosAdherentes.stream()
+        .map(SocioAdherenteWrapper::new)
+        .sorted((w1, w2) -> {
+            boolean baja1 = w1.bajaProperty().get().equals("Si");
+            boolean baja2 = w2.bajaProperty().get().equals("Si");
+            if (baja1 && !baja2) {
+                return 1; // w1 viene después de w2
+            } else if (!baja1 && baja2) {
+                return -1; // w1 viene antes de w2
+            } else {
+                return 0; // mantener el orden original
+            }
+        })
+        .collect(Collectors.toList());
         
         //Mapeo de columnas :)
         colNombre.setCellValueFactory(cell -> cell.getValue().nombreCompletoProperty());
@@ -151,49 +167,9 @@ public class VistaAdherentesSocioController implements Initializable {
                 socioSeleccionado.setFechaBaja(null);
                 socioSeleccionado.setTipoBaja(null);
             }
-        
-        //actualizar la tabla
-        recargarTablaSociosAdherentes();
-        //alertas de sugerencia de cambio de categoria.
-        // Obtén la fecha actual
-        LocalDate fechaActual = LocalDate.now();
-        System.out.println(socioadh);
-        // Calcula la diferencia en años
-        int diferenciaEnAnios = Period.between(socioadh.getFechaNacimiento(), fechaActual).getYears();
-        
-        System.out.println("Diferencia en años: "+diferenciaEnAnios
-                +"\nVinculo: "+socioadh.getVinculo().getNombre()
-                +"\nSocios mayores: "+socioadhser.tieneSociosMayores(sociotit.getNroSocio()));
-        System.out.println("Socios: "+socioadhser.tieneSocios(sociotit.getNroSocio()));
-        
-        if (diferenciaEnAnios >= 18 && socioadh.getVinculo().getNombre().equals("Hijo/a") && !socioadhser.tieneSociosMayores(sociotit.getNroSocio())) {
-            // El socio adherente es de vinculo "Hijo/a", es mayor a 18 años y el socio titular no tiene otros socios adherentes mayores.
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Cambio de Categoría");
-            alert.setHeaderText("El socio adherente es mayor a 18 años.");
-            alert.setContentText("La categoría actual del socio es " + sociotit.getCategoria().getNombre()
-                    + "¿Desea cambiar la categoría del socio titular a \"Grupo Familiar (mayores)\"?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                // El usuario seleccionó "Sí", realiza el cambio de categoría aquí
-                sociotit.setCategoria(categoriaser.findByNombre("Grupo Familiar (mayores)"));
-                sociotitser.createSocioTitular(sociotit);
-            }
-        } else if (!socio.getCategoria().getNombre().equals("Grupo Familiar (menores)") && !socioadhser.tieneSocios(sociotit.getNroSocio())) {
-            // El socio titular no está en la categoría "Grupo Familiar (menores)" y no tiene otros socios adherentes
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Cambio de Categoría");
-            alert.setHeaderText("El socio titular tiene un nuevo socio adherente");
-            alert.setContentText("La categoría actual del socio es " + sociotit.getCategoria().getNombre()
-                    + "¿Desea cambiar la categoría del socio titular a \"Grupo Familiar (menores)\"?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                // El usuario seleccionó "Sí", realiza el cambio de categoría aquí
-                sociotit.setCategoria(categoriaser.findByNombre("Grupo Familiar (menores)"));
-                sociotitser.createSocioTitular(sociotit);
-            }
-        }
         socioadhser.saveSocioAdherente(socioadh);
+        checkearCambioCategoria();
+        recargarTablaSociosAdherentes();
     }
 
     public void bajaSocio() {
@@ -218,36 +194,7 @@ public class VistaAdherentesSocioController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(VistaSocioController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        recargarTablaSociosAdherentes();
-        //alertas de sugerencia de cambio de categoria.
-        if (!socioadhser.tieneSocios(socio.getNroSocio())&&!socio.getCategoria().getNombre().equals("Individual")) {
-            // No tiene otros socios adherentes, sugiere cambio de categoría a "Individual"
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Cambio de Categoría");
-            alert.setHeaderText("El socio titular ya no tiene socios adherentes.");
-            alert.setContentText("La categoría actual del socio titular es " + socio.getCategoria().getNombre()
-                    + "¿Desea cambiar la categoría del socio titular a \"Individual\"?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                // El usuario seleccionó "Sí", realiza el cambio de categoría aquí
-                socio.setCategoria(categoriaser.findByNombre("Individual"));
-                sociotitser.createSocioTitular(socio);
-            }
-        } else if (socio.getCategoria().getNombre().equals("Grupo Familiar (mayores)")
-                && !socioadhser.tieneSociosMayores(socio.getNroSocio())) {
-            // El socio titular está en la categoría "Grupo Familiar (mayores)" y no tiene otros socios adherentes mayores
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Cambio de Categoría");
-            alert.setHeaderText("El socio titular ya no tiene socios adherentes mayores.");
-            alert.setContentText("La categoría actual del socio titular es " + socio.getCategoria().getNombre()
-                    + "¿Desea cambiar la categoría del socio titular a \"Grupo Familiar (menores)\"?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                // El usuario seleccionó "Sí", realiza el cambio de categoría aquí
-                socio.setCategoria(categoriaser.findByNombre("Grupo Familiar (menores)"));
-                sociotitser.createSocioTitular(socio);
-            }
-        }
+        checkearCambioCategoria();
         recargarTablaSociosAdherentes();
     }
 
@@ -258,10 +205,21 @@ public class VistaAdherentesSocioController implements Initializable {
         List<SocioAdherente> sociosAdherentes = socioadhser.findAllByIdTitular(socio.getNroSocio());
         //setear titulo
         lblTitulo.setText("Socio seleccionado: " + socio.getNroSocio() + " - " + socio.getNombreCompleto());
-        // Convertir a wrappers
+        //crear y ordenar wrappers
         List<SocioAdherenteWrapper> wrappers = sociosAdherentes.stream()
-                .map(SocioAdherenteWrapper::new)
-                .collect(Collectors.toList());
+        .map(SocioAdherenteWrapper::new)
+        .sorted((w1, w2) -> {
+            boolean baja1 = w1.bajaProperty().get().equals("Si");
+            boolean baja2 = w2.bajaProperty().get().equals("Si");
+            if (baja1 && !baja2) {
+                return 1; // w1 viene después de w2
+            } else if (!baja1 && baja2) {
+                return -1; // w1 viene antes de w2
+            } else {
+                return 0; // mantener el orden original
+            }
+        })
+        .collect(Collectors.toList());
         //convertir a hashmap
         this.socios = (HashMap<Long, SocioAdherente>) sociosAdherentes.stream()
                 .collect(Collectors.toMap(SocioAdherente::getNroSocio, socio -> socio));
@@ -273,7 +231,24 @@ public class VistaAdherentesSocioController implements Initializable {
         colVinculo.setCellValueFactory(cell -> cell.getValue().vinculoProperty());
         colBaja.setCellValueFactory(cell -> cell.getValue().bajaProperty());
         colFechaNac.setCellValueFactory(cell -> cell.getValue().fechaNacimientoProperty());
-
+        
+        // Configurar RowFactory personalizado para cambiar el color de la fuente de la fila
+        tableSocios.setRowFactory(tv -> {
+            TableRow<SocioAdherenteWrapper> row = new TableRow<>();
+            row.itemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    if (newValue.bajaProperty().get().equals("Si")) {
+                        System.out.println("Si");
+                        row.setTextFill(javafx.scene.paint.Color.RED); // Cambia el color de la fuente a rojo
+                    } else {
+                        System.out.println("No");
+                        row.setTextFill(javafx.scene.paint.Color.BLACK);
+                    }
+                }
+            });
+            return row;
+        });
+               
         //Setear items
         tableSocios.setItems(FXCollections.observableArrayList(wrappers));
 
@@ -308,8 +283,11 @@ public class VistaAdherentesSocioController implements Initializable {
                 btnDetalles.setDisable(true);
                 this.socioSeleccionado = null;
             }
-
+            
         });
+        checkearCambioCategoria();
+        recargarTablaSociosAdherentes();
+        
 
     }
     
@@ -324,14 +302,108 @@ public class VistaAdherentesSocioController implements Initializable {
     public void detalleAdherente(){
         index.detalleSocioAdherente(socioSeleccionado);
     }
+    
+    private void checkearCambioCategoria(){
+        List<SocioAdherente> socios = socioadhser.findAllActivosByIdTitular(socio.getNroSocio());
+        int cantAdherentes = socios.size();
+        System.out.println("Cantidad adherentes: "+cantAdherentes);
+        int cantidadHijosMayores = 0;       
+        //recorremos lista de socios y identificamos la cantidad de hijos mayores
+        if(!socios.isEmpty()){
+            for (SocioAdherente socio : socios){
+                if(socio.getVinculo().getNombre().equals("Hijo/a")){
+                    Period periodo = Period.between(socio.getFechaNacimiento(), LocalDate.now());
+                    int diferenciaEnAnios = periodo.getYears();
+                    if(diferenciaEnAnios>=18){
+                        cantidadHijosMayores++;
+                    }
+                }
+            }
+        }
+        System.out.println("Cantidad hijos mayores: "+cantidadHijosMayores);
+        if(socio.getCategoria().getIdCategoria() != 1 && cantAdherentes==0){
+            // No tiene otros socios adherentes, sugiere cambio de categoría a "Individual"
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Cambio de Categoría");
+            alert.setHeaderText("El socio titular ya no tiene socios adherentes.");
+            alert.setContentText("La categoría actual del socio titular es " + socio.getCategoria().getNombre()
+                    + "¿Desea cambiar la categoría del socio titular a \"Individual\"?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // El usuario seleccionó "Sí", realiza el cambio de categoría aquí
+                socio.setCategoria(categoriaser.findById(1L));
+                sociotitser.createSocioTitular(socio);
+            }
+        }else if (socio.getCategoria().getIdCategoria() != 2 && cantidadHijosMayores < 1 && cantAdherentes>0){
+            // El socio titular no está en la categoría "Grupo Familiar (menores)" y no tiene otros socios adherentes
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Cambio de Categoría");
+            alert.setHeaderText("El socio titular tiene socios adherentes a su nombre.");
+            alert.setContentText("La categoría actual del socio es " + socio.getCategoria().getNombre()
+                    + "¿Desea cambiar la categoría del socio titular a \"Grupo Familiar (menores)\"?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // El usuario seleccionó "Sí", realiza el cambio de categoría aquí
+                socio.setCategoria(categoriaser.findById(2L));
+                sociotitser.createSocioTitular(socio);
+            }
+        }else if (socio.getCategoria().getIdCategoria() != 3 && cantidadHijosMayores==1 && cantAdherentes>0){
+            // El socio titular no está en la categoría "Grupo Familiar (mayores)" y tiene un hijo mayor
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Cambio de Categoría");
+            alert.setHeaderText("El socio titular tiene un socio adherente 'Hijo/a' mayor.");
+            alert.setContentText("La categoría actual del socio es " + socio.getCategoria().getNombre()
+                    + "¿Desea cambiar la categoría del socio titular a \"Grupo Familiar (mayores)\"?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // El usuario seleccionó "Sí", realiza el cambio de categoría aquí
+                socio.setCategoria(categoriaser.findById(3L));
+                sociotitser.createSocioTitular(socio);
+            }
+        }else if (socio.getCategoria().getIdCategoria() != 6 && cantidadHijosMayores>1 && cantAdherentes>0){
+            // El socio titular no está en la categoría "Grupo Familiar (mas de un mayor)" y tiene mas de un hijo mayor
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Cambio de Categoría");
+            alert.setHeaderText("El socio titular tiene mas de un socio adherente 'Hijo/a' mayor.");
+            alert.setContentText("La categoría actual del socio es " + socio.getCategoria().getNombre()
+                    + "¿Desea cambiar la categoría del socio titular a \"Grupo Familiar (mas de un mayor)\"?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // El usuario seleccionó "Sí", realiza el cambio de categoría aquí
+                socio.setCategoria(categoriaser.findById(6L));
+                sociotitser.createSocioTitular(socio);
+            }
+        }
+        
+        
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //btn y label de acciones disabled por defecto
+
         lblSocioSelec.setDisable(true);
         btnBaja.setDisable(true);
         btnEditar.setDisable(true);
         btnDetalles.setDisable(true);
+        
+         // Configurar RowFactory personalizado para cambiar el color de la fuente de la fila
+        /*tableSocios.setRowFactory(tv -> new TableRow<SocioAdherenteWrapper>() {
+            @Override
+            protected void updateItem(SocioAdherenteWrapper item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setStyle("");
+                } else {
+                    if (item.bajaProperty().get().equals("Si")) {
+                        System.out.println("item propert 'Si'");
+                        setTextFill(javafx.scene.paint.Color.RED); // Establece el color de fuente a rojo
+                    } else {
+                        System.out.println("item propert 'No'");
+                        setTextFill(javafx.scene.paint.Color.BLACK); // Establece el color de fuente a negro
+                    }
+                }
+            }
+        });*/
     }
 
 }

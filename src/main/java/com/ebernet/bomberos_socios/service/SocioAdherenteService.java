@@ -55,5 +55,22 @@ public class SocioAdherenteService implements ISocioAdherenteService{
             return false;
         }
     }
+
+    @Override
+    public List<SocioAdherente> findAllActivosByIdTitular(Long idTitular) {
+        return socioadhrep.findActivosBySocioTitular(idTitular);
+    }
+
+    @Override
+    public List<SocioAdherente> findSociosCumplen18() {
+        LocalDate fechaInicio = LocalDate.now().minusMonths(1);
+        LocalDate fechaFin = LocalDate.now().plusMonths(1);
+        return socioadhrep.findSociosCumplen18(fechaInicio, fechaFin);
+    }
+
+    @Override
+    public List<SocioAdherente> findAllHijosActivosByIdTitular(Long idTitular) {
+        return socioadhrep.findHijosActivosBySocioTitular(idTitular);
+    }
     
 }

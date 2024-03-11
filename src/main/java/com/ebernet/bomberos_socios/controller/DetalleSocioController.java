@@ -67,6 +67,9 @@ public class DetalleSocioController implements Initializable {
 
     @FXML
     private TextField txtFechaBaja;
+    
+    @FXML
+    private TextField txtCuil;
 
     @FXML
     private BorderPane rootPane;
@@ -143,6 +146,7 @@ public class DetalleSocioController implements Initializable {
         txtCategoria.setText(socio.getCategoria().getIdCategoria()+" - "+socio.getCategoria().getNombre());
         txtTipoDoc.setText(socio.getTipoDoc().getNombre());
         txtNroDocumento.setText(Long.toString(socio.getNroDocumento()));
+        txtCuil.setText((socio.getNroCuil() != null)? socio.getNroCuil().toString() : "No especifica.");
         txtCobrador.setText(socio.getCobrador().getNombre());
         txtFechaNacimiento.setText(socio.getFechaNacimiento().format(dateFormatter));
         txtFechaIngreso.setText(socio.getFechaIngreso().format(dateFormatter));

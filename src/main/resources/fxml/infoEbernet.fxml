@@ -54,7 +54,7 @@
             </Label>
             <VBox alignment="BOTTOM_CENTER" prefHeight="184.0" prefWidth="312.0">
                <children>
-                  <Label text="Version 1.0">
+                  <Label text="Version 1.1 (final)">
                      <font>
                         <Font name="Arial" size="14.0" />
                      </font>

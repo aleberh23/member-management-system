@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -19,7 +20,7 @@
             <Button onAction="#verSocio" prefHeight="25.0" prefWidth="86.0" styleClass="nav-button" text="Vista Socios" />
          <Button mnemonicParsing="false" onAction="#libroJuridico" prefHeight="25.0" prefWidth="90.0" styleClass="nav-button" text="Libro Juridico" />
          <Button mnemonicParsing="false" onAction="#categorias" prefHeight="25.0" prefWidth="92.0" styleClass="nav-button" text="Categorias" />
-         <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" styleClass="nav-button" text="Cobradores" />
+         <Button mnemonicParsing="false" onAction="#cobradores" prefHeight="25.0" prefWidth="89.0" styleClass="nav-button" text="Cobradores" />
         </VBox>
     </left>
    <top>
@@ -52,11 +53,17 @@
                      <image>
                         <Image url="@../img/information_white_105113.png" />
                      </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </ImageView>
                   <ImageView fx:id="imgNotificaciones" fitHeight="53.0" fitWidth="54.0" onMouseClicked="#notificaciones" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../img/notifications_white.png" />
                      </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </ImageView>
                </children>
             </VBox>

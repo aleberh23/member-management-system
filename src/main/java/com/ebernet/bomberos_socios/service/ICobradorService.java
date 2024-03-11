@@ -6,4 +6,6 @@ import java.util.List;
 public interface ICobradorService {
     public List<Cobrador> findAllCobradores();
     public Cobrador findByNombre(String nombre);
+    public Cobrador findById(Long id);
+    public void saveCobrador(Cobrador cobrador);
 }

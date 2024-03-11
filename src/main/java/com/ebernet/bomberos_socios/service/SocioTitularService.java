@@ -1,5 +1,6 @@
 package com.ebernet.bomberos_socios.service;
 
+import com.ebernet.bomberos_socios.model.Cobrador;
 import com.ebernet.bomberos_socios.model.SocioTitular;
 import com.ebernet.bomberos_socios.repository.ICategoriaRepository;
 import com.ebernet.bomberos_socios.repository.ICobradorRepository;
@@ -8,6 +9,7 @@ import com.ebernet.bomberos_socios.repository.ILocalidadRepository;
 import com.ebernet.bomberos_socios.repository.ISocioAdherenteRepository;
 import com.ebernet.bomberos_socios.repository.ISocioTitularRepository;
 import com.ebernet.bomberos_socios.repository.ITipoDocumentoRepository;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,6 +93,12 @@ public class SocioTitularService implements ISocioTitularService{
     @Override
     public long getLastNroSocio() {
         return sociotitrep.getLastNroSocio();
+    }
+
+    @Override
+    public List<SocioTitular> findAllByCobradorAndAnio(Cobrador cob, int anio) {
+        LocalDate date = LocalDate.of(anio, 12, 31);
+        return sociotitrep.findByCobrador(cob.getIdCobrador(), date);
     }
             
     

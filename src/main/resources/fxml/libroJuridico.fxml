@@ -35,9 +35,10 @@
                         <TableView fx:id="tblSocios" prefHeight="479.0" prefWidth="929.0">
                           <columns>
                             <TableColumn fx:id="colNombre" editable="false" prefWidth="186.0" text="Nombre Completo" />
-                              <TableColumn fx:id="colDoc" editable="false" minWidth="0.0" prefWidth="219.0" text="Documento" />
-                              <TableColumn fx:id="colFDIng" editable="false" minWidth="0.0" prefWidth="194.0" text="F. de Ingreso" />
-                              <TableColumn fx:id="colLocalidad" editable="false" minWidth="0.0" prefWidth="270.0" text="Localidad" />
+                              <TableColumn fx:id="colDoc" editable="false" minWidth="0.0" prefWidth="153.0" text="Documento" />
+                              <TableColumn fx:id="colNroCuil" editable="false" prefWidth="188.0" text="Nro. Cuil" />
+                              <TableColumn fx:id="colFDIng" editable="false" minWidth="0.0" prefWidth="124.0" text="F. de Ingreso" />
+                              <TableColumn fx:id="colLocalidad" editable="false" minWidth="0.0" prefWidth="221.0" text="Localidad" />
                           </columns>
                            <VBox.margin>
                               <Insets />

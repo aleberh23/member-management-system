@@ -21,6 +21,16 @@ public class CobradorService implements ICobradorService{
     public Cobrador findByNombre(String nombre) {
         return cobradorrep.findByNombre(nombre);
     }
+
+    @Override
+    public Cobrador findById(Long id) {
+        return cobradorrep.findById(id).orElse(null);
+    }
+
+    @Override
+    public void saveCobrador(Cobrador cobrador) {
+        cobradorrep.save(cobrador);
+    }
     
     
 }

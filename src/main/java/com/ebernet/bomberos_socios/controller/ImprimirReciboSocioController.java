@@ -4,6 +4,7 @@ import com.ebernet.bomberos_socios.dto.CuotaDTO;
 import com.ebernet.bomberos_socios.dto.ReciboDTO;
 import com.ebernet.bomberos_socios.model.SocioTitular;
 import com.ebernet.bomberos_socios.service.ISocioTitularService;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,18 +19,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.application.HostServices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Chromaticity;
+import javax.print.attribute.standard.OrientationRequested;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -37,22 +48,27 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.printing.PDFPageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ImprimirReciboSocioController implements Initializable {
     
-    private SocioTitular socio;
+    @Autowired
+    private HostServices hostServices;
     
+    private SocioTitular socio;
+
     private HashMap<Integer, CuotaDTO> cuotas;
 
     @Autowired
     private ISocioTitularService sociotitser;
-    
+
     @FXML
     private Label lblTitulo;
-    
+
     @FXML
     private AnchorPane anchorPane;
 
@@ -71,7 +87,7 @@ public class ImprimirReciboSocioController implements Initializable {
         Path appFolderPath = Paths.get(appData, "bomberos_socios");
         Path recibosBomberosPath = appFolderPath.resolve("Recibos BOMBEROS");
 
-         if (!Files.exists(appFolderPath)) {
+        if (!Files.exists(appFolderPath)) {
             try {
                 Files.createDirectory(appFolderPath);
                 Files.createDirectory(recibosBomberosPath);
@@ -86,7 +102,7 @@ public class ImprimirReciboSocioController implements Initializable {
                 System.err.println("Error al crear la carpeta 'Recibos BOMBEROS': " + e.getMessage());
                 e.printStackTrace();
             }
-        } else if (!Files.exists(recibosBomberosPath)){
+        } else if (!Files.exists(recibosBomberosPath)) {
             try {
                 Files.createDirectory(recibosBomberosPath);
             } catch (IOException ex) {
@@ -98,13 +114,13 @@ public class ImprimirReciboSocioController implements Initializable {
                 System.err.println("Error al crear la carpeta 'Recibos BOMBEROS': " + ex.getMessage());
                 ex.printStackTrace();
             }
-        }else{
-             System.out.println("La carpeta de la aplicación ya existe en: " + recibosBomberosPath);
+        } else {
+            System.out.println("La carpeta de la aplicación ya existe en: " + recibosBomberosPath);
         }
         // Ruta del archivo jrxml en el paquete "reports"
         String jrxmlFilePath = "/reports/report.jrxml";
         // Directorio donde se guardarán los reportes
-        String outputDirectory = recibosBomberosPath.toString()+"/";
+        String outputDirectory = recibosBomberosPath.toString() + "/";
         // Crea un objeto de datos
         ReciboDTO recibo = new ReciboDTO();
         recibo.setNroSocio(Long.toString(socio.getNroSocio()));
@@ -143,15 +159,34 @@ public class ImprimirReciboSocioController implements Initializable {
             Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
             alerta.setTitle("Éxito");
             alerta.setHeaderText("¡Éxito!");
-            alerta.setContentText("El recibo se generó correctamente.");
-            alerta.showAndWait();
+            alerta.setContentText("El recibo se generó correctamente."
+                    + "\n¿Como desea proceder?");
+
+            // Crear botones personalizados
+            ButtonType buttonImprimir = new ButtonType("Imprimir", ButtonBar.ButtonData.OK_DONE);
+            ButtonType buttonAbrir = new ButtonType("Abrir", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            // Agregar los botones a la alerta
+            alerta.getButtonTypes().setAll(buttonImprimir, buttonAbrir);
+
+            // Mostrar la alerta y obtener la respuesta
+            Optional<ButtonType> resultado = alerta.showAndWait();
+
+            // Verificar qué botón se presionó
+            if (resultado.isPresent()) {
+                if (resultado.get() == buttonImprimir) {
+                    imprimirPDF(outputFile);
+                } else if (resultado.get() == buttonAbrir) {
+                    abrirPDF(outputFile);
+                }
+            }
 
         } catch (JRException | IOException e) {
             e.printStackTrace();
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Error");
             alerta.setHeaderText("¡Error!");
-            alerta.setContentText("Hubo un error al generar el recibo."+e.getCause());
+            alerta.setContentText("Hubo un error al generar el recibo." + e.getCause());
             alerta.showAndWait();
         }
         //obtener el stage
@@ -159,7 +194,52 @@ public class ImprimirReciboSocioController implements Initializable {
         // Cierra el Stage
         stage.close();
     }
+
+    public static void imprimirPDF(File pdfDoc) {
+        try {
+            PDDocument document = PDDocument.load(pdfDoc);
+            
+            // Obtener la impresora predeterminada
+            PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
+
+            // Crear un trabajo de impresión
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setPrintService(defaultPrinter);
+
+            // Configurar opciones de impresión
+            PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
+            attributes.add(Chromaticity.MONOCHROME);
+            // Establecer la orientación vertical
+            attributes.add(OrientationRequested.LANDSCAPE);
+ 
+            job.setPageable(new PDFPageable(document));
+            job.print(attributes);
+
+            // Cerrar el documento PDF
+            document.close();
+            Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+            alerta.setTitle("Exito");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Exito en la impresion!");
+            alerta.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Error");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error en la impresion: " + e.getCause());
+            alerta.showAndWait();
+        }
+    }
     
+     public void abrirPDF(File archivoPDF) {
+        // Obtener la URL del archivo
+        String fileUrl = archivoPDF.toURI().toString();
+
+        // Utilizar HostServices para abrir el archivo
+        hostServices.showDocument(fileUrl);
+    }
+
     @FXML
     private void cancelar() {
         //obtener el stage
@@ -167,9 +247,8 @@ public class ImprimirReciboSocioController implements Initializable {
         // Cierra el Stage
         stage.close();
     }
-    
-    
- //converter para CuotaDTO
+
+    //converter para CuotaDTO
     private final StringConverter<CuotaDTO> converterCuotaDTO = new StringConverter<>() {
         @Override
         public String toString(CuotaDTO cuota) {
@@ -203,10 +282,10 @@ public class ImprimirReciboSocioController implements Initializable {
             btnGenerar.setDisable(true);
         }
     }
-    
-    public void initData(SocioTitular sociotit){
-        this.socio=sociotit;
-        lblTitulo.setText("Imprimir recibo de: "+socio.getNroSocio()+" - "+socio.getNombreCompleto());
+
+    public void initData(SocioTitular sociotit) {
+        this.socio = sociotit;
+        lblTitulo.setText("Imprimir recibo de: " + socio.getNroSocio() + " - " + socio.getNombreCompleto());
     }
 
     @Override
@@ -246,5 +325,5 @@ public class ImprimirReciboSocioController implements Initializable {
         for (CuotaDTO cuota : cuotas) {
             this.cuotas.put(cuota.getNroCuota(), cuota);
         }
-    } 
+    }
 }

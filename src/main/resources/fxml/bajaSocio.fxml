@@ -6,31 +6,33 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="270.0" prefWidth="536.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ebernet.bomberos_socios.controller.BajaSocioController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="253.0" prefWidth="506.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ebernet.bomberos_socios.controller.BajaSocioController">
     <stylesheets>
         <URL value="@/styles/bajasocio.css" />
     </stylesheets>
    <children>
-      <Label fx:id="lblTitulo" layoutX="14.0" layoutY="14.0" prefHeight="39.0" prefWidth="505.0" text="Baja de socio: ">
+      <Label fx:id="lblTitulo" layoutX="19.0" layoutY="14.0" prefHeight="39.0" prefWidth="505.0" text="Baja de socio: ">
          <font>
             <Font name="Arial" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="42.0" layoutY="70.0" text="Fecha de baja:">
+      <Label layoutX="42.0" layoutY="78.0" text="Fecha de baja:">
          <font>
             <Font name="Arial" size="12.0" />
          </font>
       </Label>
-      <DatePicker fx:id="fechaBaja" layoutX="42.0" layoutY="85.0" prefHeight="32.0" prefWidth="447.0" promptText="dd/mm/aaaa" />
-      <Label layoutX="42.0" layoutY="140.0" text="Tipo de baja:">
+      <DatePicker fx:id="fechaBaja" layoutX="42.0" layoutY="101.0" prefHeight="32.0" prefWidth="265.0" promptText="dd/mm/aaaa" />
+      <Label layoutX="42.0" layoutY="148.0" text="Tipo de baja:">
          <font>
             <Font name="Arial" size="12.0" />
          </font>
       </Label>
-      <ComboBox fx:id="cmbxTipoBaja" layoutX="42.0" layoutY="155.0" prefHeight="32.0" prefWidth="447.0" promptText="Seleccione uno..." />
-      <Button fx:id="btnBaja" layoutX="454.0" layoutY="224.0" mnemonicParsing="false" onAction="#bajaSocio" prefHeight="32.0" prefWidth="70.0" text="Baja" />
-      <Button fx:id="btnCancelar" layoutX="375.0" layoutY="224.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="70.0" text="Cancelar" />
+      <ComboBox fx:id="cmbxTipoBaja" layoutX="42.0" layoutY="169.0" prefHeight="32.0" prefWidth="265.0" promptText="Seleccione uno..." />
+      <Button fx:id="btnBaja" layoutX="434.0" layoutY="208.0" mnemonicParsing="false" onAction="#bajaSocio" prefHeight="32.0" prefWidth="70.0" text="Baja" />
+      <Button fx:id="btnCancelar" layoutX="347.0" layoutY="208.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="70.0" text="Cancelar" />
+      <Line endX="419.0" layoutX="114.0" layoutY="67.0" startX="-113.0" />
    </children>
 </AnchorPane>

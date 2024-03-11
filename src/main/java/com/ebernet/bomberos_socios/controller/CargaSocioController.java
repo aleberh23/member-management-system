@@ -16,6 +16,7 @@ import jakarta.annotation.PostConstruct;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -54,6 +55,9 @@ public class CargaSocioController implements Initializable {
     private ICobradorService cobradorser;
     @Autowired
     private IDomicilioService domser;
+    
+    @Autowired
+    private IndexController index;
 
     @FXML
     private DatePicker fechaNacimiento;
@@ -114,6 +118,9 @@ public class CargaSocioController implements Initializable {
 
     @FXML
     private TextField txtNro;
+    
+    @FXML
+    private TextField txtCuil;
 
     @FXML
     private ComboBox<Localidad> cmbxLocalidad;
@@ -135,6 +142,19 @@ public class CargaSocioController implements Initializable {
         // Limitar la longitud a 8 caracteres
         if (texto.length() > 8) {
             txtNroDocumento.setText(texto.substring(0, 8));
+        }
+    }
+    
+    // Método para validar que solo se ingresen números y limitar el máximo a 11 caracteres
+    private void validarNroCuil() {
+        String texto = txtCuil.getText();
+        if (!texto.matches("\\d*")) {  // Verificar que solo contiene dígitos
+            txtCuil.setText(texto.replaceAll("[^\\d]", ""));  // Eliminar caracteres no numéricos
+        }
+
+        // Limitar la longitud a 11 caracteres
+        if (texto.length() > 11) {
+            txtCuil.setText(texto.substring(0, 11));
         }
     }
 
@@ -248,6 +268,7 @@ public class CargaSocioController implements Initializable {
         // Verificar que los campos de texto no estén vacíos
         boolean nombreCompletoCompleto = !txtNombre.getText().isEmpty();
         boolean nroDocumentoCompleto = !txtNroDocumento.getText().isEmpty();
+        boolean nroCuilCompleto = !txtCuil.getText().isEmpty();
         boolean nroCompleto = !txtNro.getText().isEmpty();
         boolean calleCompleta = !txtCalle.getText().isEmpty();
 
@@ -262,7 +283,7 @@ public class CargaSocioController implements Initializable {
         boolean formatoFechaIngresoCorrecto = fechaIngreso.getEditor().getText().matches("\\d{2}/\\d{2}/\\d{4}");
 
         // Devolver true si todos los campos están completos y el formato de las fechas es correcto
-        return nombreCompletoCompleto && nroDocumentoCompleto && nroCompleto && calleCompleta
+        return nombreCompletoCompleto && nroDocumentoCompleto && nroCuilCompleto && nroCompleto && calleCompleta
                 && categoriaSeleccionada && tipoDocumentoSeleccionado && cobradorSeleccionado && localidadSeleccionada
                 && formatoFechaNacimientoCorrecto && formatoFechaIngresoCorrecto;
     }
@@ -292,6 +313,7 @@ public class CargaSocioController implements Initializable {
         socio.setCategoria(cmbxCategoria.getValue());
         socio.setTipoDoc(cmbxTipoDocumento.getValue());
         socio.setNroDocumento(Long.parseLong(txtNroDocumento.getText()));
+        socio.setNroCuil(Long.parseLong(txtCuil.getText()));
         socio.setCobrador(cmbxCobrador.getValue());
         socio.setFechaNacimiento(fechaNacimiento.getValue());
         socio.setFechaIngreso(fechaIngreso.getValue());
@@ -313,29 +335,7 @@ public class CargaSocioController implements Initializable {
 
     @FXML
     public void limpiarCampos() {
-        // Limpiar campos de texto
-        txtNombre.clear();
-        txtNroDocumento.clear();
-        txtNro.clear();
-        txtCalle.clear();
-
-        // Desseleccionar elementos en ComboBox
-
-       cmbxCategoria.setPromptText("Seleccione una..");
-       cmbxCategoria.setValue(null);
-
-       cmbxTipoDocumento.setPromptText("Seleccione uno..");
-       cmbxTipoDocumento.setValue(null);
-
-       cmbxCobrador.setPromptText("Seleccione uno..");
-       cmbxCobrador.setValue(null);
-
-       cmbxLocalidad.setPromptText("Seleccione una..");
-       cmbxLocalidad.setValue(null);
-
-        // Limpiar fechas
-        fechaNacimiento.getEditor().clear();
-        fechaIngreso.getEditor().clear();
+        index.cargarSocio();
     }
     
     public void permitirExpansion(){
@@ -360,6 +360,11 @@ public class CargaSocioController implements Initializable {
         lblTitulo.setText("Alta de Socio N° "+(soctitser.getLastNroSocio()+1));
         txtNroDocumento.textProperty().addListener((observable, oldValue, newValue) -> {
             validarNumeroDocumento();
+            validarBtnGuardar();
+        });
+        
+        txtCuil.textProperty().addListener((observable, oldValue, newValue) -> {
+            validarNroCuil();
             validarBtnGuardar();
         });
 
@@ -415,6 +420,8 @@ public class CargaSocioController implements Initializable {
         //llenar cmbx categoria
         //traer lista
         List<Categoria> categorias = catser.findAllCategorias();
+        //ordenar de menor a mayor
+        Collections.sort(categorias, (c1, c2) -> Long.compare(c1.getIdCategoria(), c2.getIdCategoria()));
         // Convertir la lista a una ObservableList
         ObservableList<Categoria> categoriasObservableList = FXCollections.observableArrayList(categorias);
         // Asignar la lista al ComboBox

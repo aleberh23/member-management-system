@@ -69,4 +69,8 @@ public class SocioTitularWrapper {
                         socio.getDomicilio().getLocalidad().getNombre() : ""
         );
     }
+    
+    public StringProperty nroCuilProperty() {
+        return new SimpleStringProperty((socio.getNroCuil()!=null) ? socio.getNroCuil().toString() : "No especifica.");      
+    }
 }

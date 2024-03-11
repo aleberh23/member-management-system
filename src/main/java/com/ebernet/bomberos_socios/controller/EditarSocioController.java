@@ -96,6 +96,9 @@ public class EditarSocioController implements Initializable {
 
     @FXML
     private TextField txtNroDocumento;
+    
+    @FXML
+    private TextField txtCuil;
 
     @FXML
     private ComboBox<Cobrador> cmbxCobrador;
@@ -141,6 +144,19 @@ public class EditarSocioController implements Initializable {
         // Limitar la longitud a 8 caracteres
         if (texto.length() > 8) {
             txtNroDocumento.setText(texto.substring(0, 8));
+        }
+    }
+    
+    // Método para validar que solo se ingresen números y limitar el máximo a 11 caracteres
+    private void validarNroCuil() {
+        String texto = txtCuil.getText();
+        if (!texto.matches("\\d*")) {  // Verificar que solo contiene dígitos
+            txtCuil.setText(texto.replaceAll("[^\\d]", ""));  // Eliminar caracteres no numéricos
+        }
+
+        // Limitar la longitud a 11 caracteres
+        if (texto.length() > 11) {
+            txtCuil.setText(texto.substring(0, 11));
         }
     }
 
@@ -271,6 +287,7 @@ public class EditarSocioController implements Initializable {
         // Verificar que los campos de texto no estén vacíos
         boolean nombreCompletoCompleto = !txtNombre.getText().isEmpty();
         boolean nroDocumentoCompleto = !txtNroDocumento.getText().isEmpty();
+        boolean nroCuilCompleto =! txtCuil.getText().isEmpty();
         boolean nroCompleto = !txtNro.getText().isEmpty();
         boolean calleCompleta = !txtCalle.getText().isEmpty();
 
@@ -294,7 +311,7 @@ public class EditarSocioController implements Initializable {
         }
 
         // Devolver true si todos los campos están completos y el formato de las fechas es correcto
-        return nombreCompletoCompleto && nroDocumentoCompleto && nroCompleto && calleCompleta
+        return nombreCompletoCompleto && nroDocumentoCompleto && nroCuilCompleto && nroCompleto && calleCompleta
                 && categoriaSeleccionada && tipoDocumentoSeleccionado && cobradorSeleccionado && localidadSeleccionada
                 && formatoFechaNacimientoCorrecto && formatoFechaIngresoCorrecto;
     }
@@ -322,6 +339,7 @@ public class EditarSocioController implements Initializable {
             socioEditar.setCategoria(cmbxCategoria.getValue());
             socioEditar.setTipoDoc(cmbxTipoDocumento.getValue());
             socioEditar.setNroDocumento(Long.parseLong(txtNroDocumento.getText()));
+            socioEditar.setNroCuil(Long.parseLong(txtCuil.getText()));
             socioEditar.setCobrador(cmbxCobrador.getValue());
             socioEditar.setFechaNacimiento(fechaNacimiento.getValue());
             socioEditar.setFechaIngreso(fechaIngreso.getValue());
@@ -364,6 +382,7 @@ public class EditarSocioController implements Initializable {
         cmbxCategoria.setValue(socioEditar.getCategoria());
         cmbxTipoDocumento.setValue(socioEditar.getTipoDoc());
         txtNroDocumento.setText(Long.toString(socioEditar.getNroDocumento()));
+        txtCuil.setText((this.socioEditar.getNroCuil() != null)? this.socioEditar.getNroCuil().toString() : "");
         cmbxCobrador.setValue(socioEditar.getCobrador());
         fechaNacimiento.setValue(socioEditar.getFechaNacimiento());
         fechaIngreso.setValue(socioEditar.getFechaIngreso());
@@ -378,6 +397,11 @@ public class EditarSocioController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         txtNroDocumento.textProperty().addListener((observable, oldValue, newValue) -> {
             validarNumeroDocumento();
+            validarBtnGuardar();
+        });
+        
+        txtCuil.textProperty().addListener((observable, oldValue, newValue) -> {
+            validarNroCuil();
             validarBtnGuardar();
         });
 

@@ -89,6 +89,19 @@
                               <Insets top="2.0" />
                            </VBox.margin>
                         </TextField>
+                        <Label text="Nro. Cuil:">
+                           <font>
+                              <Font name="Arial" size="12.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="15.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="txtCuil" editable="false">
+                           <VBox.margin>
+                              <Insets top="2.0" />
+                           </VBox.margin>
+                        </TextField>
                         <Label text="Cobrador:">
                            <font>
                               <Font name="Arial" size="12.0" />
@@ -124,19 +137,6 @@
                            </VBox.margin>
                         </Label>
                         <TextField fx:id="txtFechaIngreso" editable="false">
-                           <VBox.margin>
-                              <Insets top="2.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <Label fx:id="lblFechaBaja" text="Fecha de baja:">
-                           <font>
-                              <Font name="Arial" size="12.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField fx:id="txtFechaBaja" editable="false">
                            <VBox.margin>
                               <Insets top="2.0" />
                            </VBox.margin>
@@ -221,12 +221,25 @@
                         </Label>
                         <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0">
                            <children>
+                              <Label fx:id="lblFechaBaja" text="Fecha de baja:">
+                                 <font>
+                                    <Font name="Arial" size="12.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField fx:id="txtFechaBaja" editable="false">
+                                 <VBox.margin>
+                                    <Insets top="2.0" />
+                                 </VBox.margin>
+                              </TextField>
                               <Label text="Tipo de baja:">
                                  <font>
                                     <Font name="Arial" size="12.0" />
                                  </font>
                                  <VBox.margin>
-                                    <Insets />
+                                    <Insets top="15.0" />
                                  </VBox.margin>
                               </Label>
                               <TextField fx:id="txtTipoBaja" editable="false">

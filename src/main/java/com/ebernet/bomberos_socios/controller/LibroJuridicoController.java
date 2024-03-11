@@ -1,10 +1,12 @@
 package com.ebernet.bomberos_socios.controller;
 
+import static com.ebernet.bomberos_socios.controller.ImprimirLibroJuridicoAnioController.imprimirPDF;
 import com.ebernet.bomberos_socios.dto.SocioTitularDTO;
 import com.ebernet.bomberos_socios.model.SocioTitular;
 import com.ebernet.bomberos_socios.service.ISocioTitularService;
 import com.ebernet.bomberos_socios.ui.SocioTitularWrapper;
 import java.awt.Desktop;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,12 +38,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Chromaticity;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -49,6 +58,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.printing.PDFPageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
@@ -56,7 +67,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LibroJuridicoController implements Initializable {
-
+    
+    @Autowired
+    private HostServices hostServices;
+    
     @Autowired
     private ApplicationContext context;
 
@@ -67,7 +81,7 @@ public class LibroJuridicoController implements Initializable {
     private TableView<SocioTitularWrapper> tblSocios;
 
     @FXML
-    private TableColumn<SocioTitularWrapper, String> colNombre, colDoc, colFDIng, colLocalidad;
+    private TableColumn<SocioTitularWrapper, String> colNombre, colDoc, colNroCuil, colFDIng, colLocalidad;
 
     @FXML
     private Pagination pagination;
@@ -161,6 +175,7 @@ public class LibroJuridicoController implements Initializable {
                     dto.setNroDocumento(Long.toString(socio.getNroDocumento()));
                     dto.setFechaIngreso(formatoDto.format(socio.getFechaIngreso()));
                     dto.setLocalidad(socio.getDomicilio().getLocalidad().getNombre());
+                    dto.setNroCuil((socio.getNroCuil() != null)? socio.getNroCuil().toString() : "No especifica.");
                     listaSociosDTO.add(dto);
                 }
 
@@ -200,8 +215,26 @@ public class LibroJuridicoController implements Initializable {
                     Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
                     alerta.setTitle("Éxito");
                     alerta.setHeaderText("¡Éxito!");
-                    alerta.setContentText("El pdf se genero correctamente!.");
-                    alerta.showAndWait();
+                    alerta.setContentText("El pdf se genero correctamente!"
+                            + "\n¿Como desea proceder?");
+                    // Crear botones personalizados
+                    ButtonType buttonImprimir = new ButtonType("Imprimir", ButtonBar.ButtonData.OK_DONE);
+                    ButtonType buttonAbrir = new ButtonType("Abrir", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                    // Agregar los botones a la alerta
+                    alerta.getButtonTypes().setAll(buttonImprimir, buttonAbrir);
+
+                    // Mostrar la alerta y obtener la respuesta
+                    Optional<ButtonType> resultado = alerta.showAndWait();
+
+                    // Verificar qué botón se presionó
+                    if (resultado.isPresent()) {
+                        if (resultado.get() == buttonImprimir) {
+                            imprimirPDF(outputFile);
+                        } else if (resultado.get() == buttonAbrir) {
+                            abrirPDF(outputFile);
+                        }
+                    }
                 } catch (JRException | FileNotFoundException e) {
                     e.printStackTrace();
                     // Mostrar la alerta de error
@@ -214,6 +247,49 @@ public class LibroJuridicoController implements Initializable {
             }
 
         });
+    }
+    
+    public static void imprimirPDF(File pdfDoc) {
+        try {
+            PDDocument document = PDDocument.load(pdfDoc);
+
+            // Obtener la impresora predeterminada
+            PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
+
+            // Crear un trabajo de impresión
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setPrintService(defaultPrinter);
+
+            // Configurar opciones de impresión
+            PrintRequestAttributeSet attributes = new HashPrintRequestAttributeSet();
+            attributes.add(Chromaticity.MONOCHROME);
+
+            // Imprimir el documento PDF
+            job.setPageable(new PDFPageable(document));
+            job.print(attributes);
+
+            // Cerrar el documento PDF
+            document.close();
+            Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+            alerta.setTitle("Exito");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Exito en la impresion!");
+            alerta.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Error");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error en la impresion: "+e.getCause());
+            alerta.showAndWait();
+        }
+    }
+    public void abrirPDF(File archivoPDF) {
+        // Obtener la URL del archivo
+        String fileUrl = archivoPDF.toURI().toString();
+
+        // Utilizar HostServices para abrir el archivo
+        hostServices.showDocument(fileUrl);
     }
 
     public void cambiarPagina(int pagina) {
@@ -230,6 +306,7 @@ public class LibroJuridicoController implements Initializable {
         colDoc.setCellValueFactory(cell -> cell.getValue().nroDocumentoProperty());
         colLocalidad.setCellValueFactory(cell -> cell.getValue().localidadProperty());
         colFDIng.setCellValueFactory(cell -> cell.getValue().fechaIngresoProperty());
+        colNroCuil.setCellValueFactory(cell -> cell.getValue().nroCuilProperty());
 
         // Setear items
         tblSocios.setItems(FXCollections.observableArrayList(wrappers));
@@ -259,6 +336,7 @@ public class LibroJuridicoController implements Initializable {
         colDoc.setCellValueFactory(cell -> cell.getValue().nroDocumentoProperty());
         colLocalidad.setCellValueFactory(cell -> cell.getValue().localidadProperty());
         colFDIng.setCellValueFactory(cell -> cell.getValue().fechaIngresoProperty());
+        colNroCuil.setCellValueFactory(cell -> cell.getValue().nroCuilProperty());
 
         // Setear items
         tblSocios.setItems(FXCollections.observableArrayList(wrappers));

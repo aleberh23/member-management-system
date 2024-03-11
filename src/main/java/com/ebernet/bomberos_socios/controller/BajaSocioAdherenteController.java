@@ -143,6 +143,7 @@ public class BajaSocioAdherenteController implements Initializable {
         //fechaBaja
         fechaBaja.getEditor().textProperty().addListener((observable, oldValue, newValue) -> validarBtnBaja());
         fechaBaja.valueProperty().addListener((observable, oldValue, newValue) -> validarBtnBaja());
+        fechaBaja.setConverter(converter);
         //combobox
         cmbxTipoBaja.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> validarBtnBaja());
         //llenar cmbx tipo baja

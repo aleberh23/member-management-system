@@ -1,5 +1,6 @@
 package com.ebernet.bomberos_socios.service;
 
+import com.ebernet.bomberos_socios.model.Cobrador;
 import com.ebernet.bomberos_socios.model.SocioTitular;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -15,4 +16,5 @@ public interface ISocioTitularService {
     public Page<SocioTitular> findByFilter(String filterText, boolean deBaja, int page, int size);
     public long countByFilter(String filterText, boolean deBaja);
     public long getLastNroSocio();
+    public List<SocioTitular> findAllByCobradorAndAnio(Cobrador cob, int anio);
 }

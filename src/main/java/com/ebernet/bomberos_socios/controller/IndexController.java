@@ -47,6 +47,7 @@ public class IndexController implements Initializable {
             dialogStage.initModality(Modality.APPLICATION_MODAL); // Hace que la nueva ventana sea modal
             dialogStage.setResizable(false); // Hace que la ventana no sea redimensionable
             dialogStage.setTitle("Informacion");
+            dialogStage.getIcons().add(new javafx.scene.image.Image("/img/logo_sistema.png"));  // Reemplaza con la ruta correcta al ícono
 
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
@@ -60,16 +61,23 @@ public class IndexController implements Initializable {
     
     @FXML
     private void notificaciones(){
-        
+        loadView("/fxml/vistaNotificaciones.fxml");
+        VistaNotificacionesController controller = context.getBean(VistaNotificacionesController.class);
+        controller.initData();
     }
     
     @FXML
     private void categorias(){
-    loadView("/fxml/vistaCategorias.fxml");
+        loadView("/fxml/vistaCategorias.fxml");
     }
     
     @FXML
-    private void cargarSocio() {
+    private void cobradores(){
+        loadView("/fxml/vistaCobradores.fxml");
+    }
+    
+    @FXML
+    public void cargarSocio() {
         loadView("/fxml/cargaSocio.fxml");
         CargaSocioController controller = context.getBean(CargaSocioController.class);
         controller.permitirExpansion();

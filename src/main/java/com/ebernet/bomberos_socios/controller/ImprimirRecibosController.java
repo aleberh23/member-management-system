@@ -5,7 +5,6 @@ import com.ebernet.bomberos_socios.dto.ReciboDTO;
 import com.ebernet.bomberos_socios.model.SocioTitular;
 import com.ebernet.bomberos_socios.service.ISocioTitularService;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -19,24 +18,22 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import javafx.application.HostServices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRPrintPage;
 import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -48,8 +45,12 @@ import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 @Component
 public class ImprimirRecibosController implements Initializable {
+    
+    @Autowired
+    private HostServices hostServices;
 
     private HashMap<Integer, CuotaDTO> cuotas;
 
@@ -164,8 +165,18 @@ public class ImprimirRecibosController implements Initializable {
             Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
             alerta.setTitle("Éxito");
             alerta.setHeaderText("¡Éxito!");
-            alerta.setContentText("Los recibos se generaron correctamente en un solo archivo PDF.");
-            alerta.showAndWait();
+            alerta.setContentText("Los recibos se generaron correctamente en un solo archivo PDF."
+                    + "\n¿Desea abrirlo?");
+            Optional<ButtonType> resultado = alerta.showAndWait();
+
+            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                abrirPDF(outputFile);
+            }else{
+                //obtener el stage
+                Stage stage = (Stage) anchorPane.getScene().getWindow();
+                // Cierra el Stage
+                stage.close();
+            }
 
         } catch (JRException e) {
             e.printStackTrace();
@@ -180,6 +191,15 @@ public class ImprimirRecibosController implements Initializable {
         Stage stage = (Stage) anchorPane.getScene().getWindow();
         // Cierra el Stage
         stage.close();
+    }
+    
+   
+    public void abrirPDF(File archivoPDF) {
+        // Obtener la URL del archivo
+        String fileUrl = archivoPDF.toURI().toString();
+
+        // Utilizar HostServices para abrir el archivo
+        hostServices.showDocument(fileUrl);
     }
 
     @FXML
