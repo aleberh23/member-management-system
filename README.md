@@ -58,10 +58,20 @@ Here are some screenshots of the working system. The data is censored.
 
 
 ## Installation instructions:
+Before proceeding with the installation steps, you must have the following prerequisites installed:
 
-1. Clona el repositorio: `git clone https://github.com/tu-usuario/tu-proyecto.git`
-2. Ingresa al directorio del proyecto: `cd tu-proyecto`
-3. Instala las dependencias: `npm install` (o el comando correspondiente para tu proyecto)
-4. Ejecuta la aplicación: `npm start` (o el comando correspondiente para tu proyecto)
+- JDK 20 (for WINDOWS 64 bits: https://download.oracle.com/java/20/archive/jdk-20.0.2_windows-x64_bin.exe)
+- PostgreSQL server running on localhost:5432 (for WINDOWS 64 bits: https://sbp.enterprisedb.com/getfile.jsp?fileid=1258893)
 
-Asegúrate de tener las herramientas necesarias instaladas antes de seguir estos pasos.
+  <h3>Instalation Steps:</h3>
+
+1. Go to the final release: https://github.com/aleberh23/member-management-system/releases/tag/final.
+2. Download the .zip file called: "release.1.1.final".
+3. Extract the compressed file.
+4. In the folder you have the test database backup, and a .bat script, here you have two options.
+    - Execute the script, this will automatically create the DB called 'bomberos_socios', then executes the command pg_restore to restore the backup to the new DB, and finally changes the password for the user 'postgres' to 'postgres'.
+    - Do this process manually, by creating the DB "bomberos_socios" in pg_admin or by command line, restoring the DB backup called "bomberos_socios_ghubtest.sql", and finally changing the password of postgres user to 'postgres'.
+5. Open the .exe file of the system.
+6. Login screen should appear after about 10 seconds, the user is 'test' and the password '123'.
+7. Now the system is ready to use!
+
