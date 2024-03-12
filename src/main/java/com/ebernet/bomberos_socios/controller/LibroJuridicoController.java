@@ -67,10 +67,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LibroJuridicoController implements Initializable {
-    
-    @Autowired
-    private HostServices hostServices;
-    
+
     @Autowired
     private ApplicationContext context;
 
@@ -175,7 +172,7 @@ public class LibroJuridicoController implements Initializable {
                     dto.setNroDocumento(Long.toString(socio.getNroDocumento()));
                     dto.setFechaIngreso(formatoDto.format(socio.getFechaIngreso()));
                     dto.setLocalidad(socio.getDomicilio().getLocalidad().getNombre());
-                    dto.setNroCuil((socio.getNroCuil() != null)? socio.getNroCuil().toString() : "No especifica.");
+                    dto.setNroCuil((socio.getNroCuil() != null) ? socio.getNroCuil().toString() : "No especifica.");
                     listaSociosDTO.add(dto);
                 }
 
@@ -248,7 +245,7 @@ public class LibroJuridicoController implements Initializable {
 
         });
     }
-    
+
     public static void imprimirPDF(File pdfDoc) {
         try {
             PDDocument document = PDDocument.load(pdfDoc);
@@ -280,16 +277,22 @@ public class LibroJuridicoController implements Initializable {
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Error");
             alerta.setHeaderText(null);
-            alerta.setContentText("Error en la impresion: "+e.getCause());
+            alerta.setContentText("Error en la impresion: " + e.getCause());
             alerta.showAndWait();
         }
     }
-    public void abrirPDF(File archivoPDF) {
-        // Obtener la URL del archivo
-        String fileUrl = archivoPDF.toURI().toString();
 
-        // Utilizar HostServices para abrir el archivo
-        hostServices.showDocument(fileUrl);
+    public void abrirPDF(File archivoPDF) {
+        try {
+            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + archivoPDF);
+        } catch (IOException ex) {
+            Logger.getLogger(ImprimirControlCobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Error");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al abrir. " + ex.getCause());
+            alerta.showAndWait();
+        }
     }
 
     public void cambiarPagina(int pagina) {

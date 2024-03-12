@@ -53,6 +53,8 @@ import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.HostServices;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar;
@@ -61,32 +63,29 @@ import javax.print.attribute.standard.Chromaticity;
 
 @Component
 public class ImprimirControlCobranzaController implements Initializable {
-    
-    @Autowired
-    private HostServices hostServices;
-    
+
     private Cobrador cobrador;
-    
+
     @Autowired
     private ICobradorService cobradorser;
-    
+
     @Autowired
     private ISocioTitularService sociotitser;
-    
+
     @FXML
     private AnchorPane anchorPane;
-    
+
     @FXML
     private TextField txtCobrador;
-    
+
     @FXML
     private ComboBox<Integer> cmbxAnio;
-    
+
     @FXML
     private Button btnCancelar, btnGenerar;
-    
+
     @FXML
-    private void generar(){
+    private void generar() {
         String appData = System.getenv("APPDATA");
         Path appFolderPath = Paths.get(appData, "bomberos_socios");
         Path controlDeCobranzasBomberosPath = appFolderPath.resolve("Control de cobranzas BOMBEROS");
@@ -124,7 +123,7 @@ public class ImprimirControlCobranzaController implements Initializable {
         // Ruta del archivo jrxml en el paquete "reports"
         String jrxmlFilePath = "/reports/controlCobranza.jrxml";
         // Directorio donde se guardarán los reportes
-        String outputDirectory = controlDeCobranzasBomberosPath.toString()+"/";
+        String outputDirectory = controlDeCobranzasBomberosPath.toString() + "/";
         // Crea una lista de sociosDTO a partir de la lista de socios objeto
         List<SocioTitular> sociostit = sociotitser.findAllByCobradorAndAnio(cobrador, cmbxAnio.getValue());
         List<SocioTitularDTO> listaSociosDTO = new ArrayList<SocioTitularDTO>();
@@ -161,7 +160,7 @@ public class ImprimirControlCobranzaController implements Initializable {
             // Guarda el informe en un archivo PDF en la carpeta especificada
             System.out.println("report directory: " + jrxmlFilePath);
             System.out.println("output directory: " + outputDirectory);
-            File outputFile = new File(outputDirectory + "controldecobranza_"+cobrador.getNombre()+"_" + cmbxAnio.getValue() + "_" + fechaFormateadaNombreArchivo + "hs.pdf");
+            File outputFile = new File(outputDirectory + "controldecobranza_" + cobrador.getNombre() + "_" + cmbxAnio.getValue() + "_" + fechaFormateadaNombreArchivo + "hs.pdf");
             JasperExportManager.exportReportToPdfStream(jasperPrint, new FileOutputStream(outputFile));
 
             // Mostrar la alerta de éxito
@@ -203,7 +202,7 @@ public class ImprimirControlCobranzaController implements Initializable {
         // Cierra el Stage
         stage.close();
     }
-    
+
     public static void imprimirPDF(File pdfDoc) {
         try {
             PDDocument document = PDDocument.load(pdfDoc);
@@ -235,34 +234,38 @@ public class ImprimirControlCobranzaController implements Initializable {
             Alert alerta = new Alert(AlertType.ERROR);
             alerta.setTitle("Error");
             alerta.setHeaderText(null);
-            alerta.setContentText("Error en la impresion: "+e.getCause());
+            alerta.setContentText("Error en la impresion: " + e.getCause());
             alerta.showAndWait();
         }
     }
-    
-     public void abrirPDF(File archivoPDF) {
-        // Obtener la URL del archivo
-        String fileUrl = archivoPDF.toURI().toString();
 
-        // Utilizar HostServices para abrir el archivo
-        hostServices.showDocument(fileUrl);
+    public void abrirPDF(File archivoPDF) {
+        try {
+            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + archivoPDF);
+        } catch (IOException ex) {
+            Logger.getLogger(ImprimirControlCobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alerta = new Alert(AlertType.ERROR);
+            alerta.setTitle("Error");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al abrir. " + ex.getCause());
+            alerta.showAndWait();
+        }
     }
 
-    
     @FXML
-    private void cancelar(){
+    private void cancelar() {
         //obtener el stage
         Stage stage = (Stage) anchorPane.getScene().getWindow();
         // Cierra el Stage
         stage.close();
     }
-    
-    public void initData(Cobrador cob){
+
+    public void initData(Cobrador cob) {
         this.cobrador = cob;
         txtCobrador.setEditable(false);
         txtCobrador.setText(cobrador.getNombre());
     }
-    
+
     private boolean validarCamposCompletos() {
         // Verificar que el comboboc tenga elementos seleccionados
         boolean anioSeleccioando = cmbxAnio.getSelectionModel().getSelectedItem() != null;
@@ -280,10 +283,10 @@ public class ImprimirControlCobranzaController implements Initializable {
             btnGenerar.setDisable(true);
         }
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       btnGenerar.setDisable(true);
+        btnGenerar.setDisable(true);
         //llenar cmbxAnio
         // Obtener el año actual
         int anioActual = Year.now().getValue();
@@ -298,6 +301,6 @@ public class ImprimirControlCobranzaController implements Initializable {
         cmbxAnio.setItems(opcionesAnios);
 
         cmbxAnio.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> validarBtnGuardar());
-    }    
-    
+    }
+
 }

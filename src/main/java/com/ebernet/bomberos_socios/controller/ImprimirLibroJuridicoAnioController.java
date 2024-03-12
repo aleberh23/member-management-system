@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.HostServices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,10 +57,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ImprimirLibroJuridicoAnioController implements Initializable {
-    
-    @Autowired
-    private HostServices hostServices;
-    
+
     @Autowired
     private ISocioTitularService sociotitser;
 
@@ -121,7 +120,7 @@ public class ImprimirLibroJuridicoAnioController implements Initializable {
         // Ruta del archivo jrxml en el paquete "reports"
         String jrxmlFilePath = "/reports/libroJuridicoAnio.jrxml";
         // Directorio donde se guardarán los reportes
-        String outputDirectory = libroJuridicosBomberosPath.toString()+"/";
+        String outputDirectory = libroJuridicosBomberosPath.toString() + "/";
         // Crea una lista de recibosDTO a partir de la lista de socios objeto
         List<SocioTitular> sociostit = sociotitser.findAllSociosTitularesByAnioIngreso(cmbxAnio.getValue());
         List<SocioTitularDTO> listaSociosDTO = new ArrayList<SocioTitularDTO>();
@@ -132,7 +131,7 @@ public class ImprimirLibroJuridicoAnioController implements Initializable {
             dto.setNroDocumento(Long.toString(socio.getNroDocumento()));
             dto.setFechaIngreso(formatoDto.format(socio.getFechaIngreso()));
             dto.setLocalidad(socio.getDomicilio().getLocalidad().getNombre());
-            dto.setNroCuil((socio.getNroCuil() != null)? socio.getNroCuil().toString() : "No especifica.");
+            dto.setNroCuil((socio.getNroCuil() != null) ? socio.getNroCuil().toString() : "No especifica.");
             listaSociosDTO.add(dto);
         }
 
@@ -193,7 +192,7 @@ public class ImprimirLibroJuridicoAnioController implements Initializable {
                     abrirPDF(outputFile);
                 }
             }
-            
+
         } catch (JRException | FileNotFoundException e) {
             e.printStackTrace();
             // Mostrar la alerta de error
@@ -209,7 +208,7 @@ public class ImprimirLibroJuridicoAnioController implements Initializable {
         // Cierra el Stage
         stage.close();
     }
-    
+
     public static void imprimirPDF(File pdfDoc) {
         try {
             PDDocument document = PDDocument.load(pdfDoc);
@@ -241,17 +240,24 @@ public class ImprimirLibroJuridicoAnioController implements Initializable {
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Error");
             alerta.setHeaderText(null);
-            alerta.setContentText("Error en la impresion: "+e.getCause());
+            alerta.setContentText("Error en la impresion: " + e.getCause());
             alerta.showAndWait();
         }
     }
-    public void abrirPDF(File archivoPDF) {
-        // Obtener la URL del archivo
-        String fileUrl = archivoPDF.toURI().toString();
 
-        // Utilizar HostServices para abrir el archivo
-        hostServices.showDocument(fileUrl);
+    public void abrirPDF(File archivoPDF) {
+        try {
+            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + archivoPDF);
+        } catch (IOException ex) {
+            Logger.getLogger(ImprimirControlCobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Error");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al abrir. " + ex.getCause());
+            alerta.showAndWait();
+        }
     }
+
     private boolean validarCamposCompletos() {
         // Verificar que el comboboc tenga elementos seleccionados
         boolean anioSeleccioando = cmbxAnio.getSelectionModel().getSelectedItem() != null;

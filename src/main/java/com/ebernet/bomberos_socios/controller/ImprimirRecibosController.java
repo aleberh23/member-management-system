@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.HostServices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,9 +50,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ImprimirRecibosController implements Initializable {
-    
-    @Autowired
-    private HostServices hostServices;
 
     private HashMap<Integer, CuotaDTO> cuotas;
 
@@ -195,11 +194,16 @@ public class ImprimirRecibosController implements Initializable {
     
    
     public void abrirPDF(File archivoPDF) {
-        // Obtener la URL del archivo
-        String fileUrl = archivoPDF.toURI().toString();
-
-        // Utilizar HostServices para abrir el archivo
-        hostServices.showDocument(fileUrl);
+        try {
+            Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + archivoPDF);
+       } catch (IOException ex) {
+           Logger.getLogger(ImprimirControlCobranzaController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Error");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Error al abrir. "+ex.getCause());
+            alerta.showAndWait();
+       }
     }
 
     @FXML
