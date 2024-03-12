@@ -18,19 +18,10 @@ This are the ones that paid the month bill, this type of member can have adheren
 Categories: 
 • Individual | Individual :  The main member must not have any additional members.
 • Grupo Familiar (Menores) | Family Group (Minors) : The main member must have at least one adherent member of type "Hijo/a" (son/daughter) who is a minor.
-• Grupo Familiar (Mayores) | Family Group (Majors): The main member must have at least one adherent member of type "Hijo/a who is 18 years old or older.
-• Grupo Familiar (Más de un Mayor) | Family Group (Multiple Majors)
-
-Description: This category is for families with more than one adult child.
-Requirements: The main member must have more than one additional member who is an adult child.
-• Comercio | Business
-
-Description: This category is for businesses or commercial establishments.
-Requirements: The main member must be the owner of a business or the business itself.
-• Hogar de Ancianos | Nursing Home
-
-Description: This category is for nursing homes.
-Requirements: The main member must be the representative of a nursing home or the nursing home itself.
+• Grupo Familiar (Mayores) | Family Group (Majors): The main member must have at least one adherent member of type "Hijo/a" (son/daughter) who is 18 years old or older.
+• Grupo Familiar (Más de un Mayor) | Family Group (Multiple Majors) : The main member must have more than one adherent member of type "Hijo/a" (son/daughter) who is 18 years old or older.
+• Comercio | Business : The main member must be the owner of a business or the business itself.
+• Hogar de Ancianos | Nursing Home : The main member must be the representative of a nursing home or the nursing home itself.
 
 ## Imágenes
 
