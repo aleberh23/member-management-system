@@ -68,10 +68,10 @@ Before proceeding with the installation steps, you must have the following prere
 1. Go to the final release: https://github.com/aleberh23/member-management-system/releases/tag/final.
 2. Download the .zip file called: "release.1.1.final".
 3. Extract the compressed file.
-4. In the folder you have the test database backup, and a .bat script, here you have two options.
+4. Inside the folder 'database' you have the test database backup, and a .bat script, here you have two options.
     - Execute the script, this will automatically create the DB called 'bomberos_socios', then executes the command pg_restore to restore the backup to the new DB, and finally changes the password for the user 'postgres' to 'postgres'.
     - Do this process manually, by creating the DB "bomberos_socios" in pg_admin or by command line, restoring the DB backup called "bomberos_socios_ghubtest.sql", and finally changing the password of postgres user to 'postgres'.
-5. Open the .exe file of the system.
+5. Open the .exe file of the system located in the root directory of the .zip archive.
 6. Login screen should appear after about 10 seconds, the user is 'test' and the password '123'.
 7. Now the system is ready to use!
 
