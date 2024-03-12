@@ -3,33 +3,38 @@
 
 This system, which I developed as the final project for my Software Development Technician career, originates from a practical need in the healthcare sector. It was born out of the specific requirements conveyed to me by two HR professionals working within a healthcare institution. With their insights and needs in mind, I crafted a solution tailored to the unique demands of managing human resources in a hospital clinic environment. This project serves as a testament to my ability to translate real-world challenges into effective software solutions, demonstrating my skills and expertise gained throughout my academic journey. The main parts of the system are:
 
-<h3>Employee Profile Management:</h3>
-This part allows the HR personnel to maintain detailed personal information and employment records for each employee, including their ID number, name, date of birth, hire date, contact details, sector assignment, and document numbers (ID, Social Security, etc.). It also facilitates tracking of employee contract statuses (active, expired, or converted to permanent).
+<h3>Virtual Employee Profile Management:</h3>
+This integral component serves as a comprehensive repository for each employee, housing essential details such as their name, email, phone number, birth date, date of admission, assigned sector, etc. Within this section, the system further categorizes information into four distinct subsections:
 
-<h3>Address Management:</h3>
-The system stores and manages the residential addresses of employees, indicating whether a particular location is within the service area of the medical audit service provided by the clinic.
+- **Contracts:** Provides insight into the various contracts associated with the employee, including details on their status (active, expired, or converted to permanent).
+- **Family Charges:** Contains pertinent information concerning the family members of the employee.
+- **Addresses:** Offers a centralized location for storing and managing different addresses associated with the employee, ensuring accurate record-keeping.
+- **Licenses:** Tracks all licenses acquired or anticipated by the employee, encompassing a range of categories such as vacations, exams, family member sickness, marriage, and more. This section provides visibility into the employee's licensure status, aiding in efficient management of time-off requests and related administrative tasks.
 
-<h3>Attendance and Leave Tracking:</h3>
-This component enables the HR staff to record employee attendance, absences, and various types of leaves, such as sick leave, exam leave, family leave, and bereavement leave. It integrates with an existing time clock system called "Cronos21" to import attendance data.
+<h3>Employee Absences Management:</h3>
+This integral feature empowers HR staff to meticulously track employee absences and leaves of various types, including sick leave, exam leave, family leave, and bereavement leave. The system streamlines the process by providing a dedicated section where HR personnel can effortlessly log absences for specific employees on particular days. These absences are seamlessly reflected in the daily report, ensuring accurate and up-to-date records of employee attendance and leave usage.
 
-</h3>Vacation Calculation:</h3>
-Based on the employee's hire date and years of service, the system automatically calculates the number of vacation days they are entitled to each year, following specific rules defined by the clinic's policies.
+<h3>Vacation Entitlement Verification:</h3>
+This component encompasses a class that serves as a proof of the vacation days allotted to each employee within a specific period. The system automatically calculates these days based on the employee's hire date and years of service, adhering to the clinic's policies. However, prior to generating an ordinary license for an employee, HR personnel must utilize this class to verify the entitlement of vacation days. This verification ensures that the employee's vacation allocation is accurate and up-to-date before proceeding with the issuance of the license.
 
-</h3>Daily Notices:</h3>
-The system generates a daily report that includes information on long-term employee leaves, upcoming retirements, employees on contract, and new mothers eligible for lactation hours.
+<h3>Daily Report Generation:</h3>
+In this component, HR employees generate a daily report to capture vital information pertinent to daily operations. The report is generated each day and encompasses details such as employees with active contracts for that date, employees currently on various types of licenses, absences recorded for the day, and employees with scheduled retirement dates within the remainder of the year. This comprehensive report facilitates effective management of workforce dynamics and aids in planning and decision-making processes within the HR department. This component not only facilitates the daily generation of reports but also ensures accessibility to previous and subsequent daily reports at any time. HR employees can consult earlier or later daily reports as needed, with the system automatically updating them to reflect any new information
 
-<h3>Reporting and Filtering:</h3>
-The software provides filtering and reporting capabilities, allowing HR personnel to generate reports in PDF or Excel format based on various criteria, such as employee sector or specific data points.
+<h3>Comprehensive Reporting Capabilities:</h3>
+In this feature set, the software offers extensive reporting functionalities, empowering HR personnel to generate detailed PDF reports efficiently. Users can produce comprehensive reports containing the complete data file of an employee, encompassing personal information, labor records, contact details, addresses, family charges, active and completed contracts, as well as licenses.
+Additionally, the system facilitates the generation of PDF reports specifically tailored to individual daily summaries selected by the user. This capability ensures that HR personnel can swiftly access and share precise information, optimizing decision-making processes and enhancing overall efficiency within the department.
+
+<h3>Streamlined Data Filtering:</h3>
+This component simplifies data management by providing basic filtering capabilities for the lists of employees, contracts, and licenses. Users can easily apply filters to these lists to locate specific information swiftly. This functionality enhances efficiency by allowing HR personnel to quickly find relevant employees, contracts, or licenses within the system.
 
 <h3>User Roles and Access Control:</h3>
-Depending on their roles within the clinic, employees will have different levels of access to the system's features and data.
+The system implements two distinct roles to manage access and privileges effectively. 
+The first role, designated as "HR Personnel," is tailored for employees within the HR department. Users assigned to this role possess complete access to all features and data within the system, enabling them to perform comprehensive HR tasks.
+
+The second role, named "Entrance Desk," is specifically designed for employees tasked with managing attendance and absences. Users in this role have limited access, restricted solely to the functionality required for generating absences. This streamlined access ensures that entrance desk personnel can efficiently carry out their responsibilities without unnecessary access to other system features.
 
 ## Technologies used:
-The system is developed in Java, utilizing the "Spring Boot" framework, adapted for use with FXML views and their controllers in JavaFX. Additionally, Spring Data JPA will be employed for data persistence in a PostgreSQL database. Furthermore, JasperReports library will be incorporated for PDF printing functionality.
 
-This adaptation was chosen to harness the powerful capabilities of the "Spring Boot" framework, particularly its seamless movement of data between different components of the system. While "Spring Boot" is commonly associated with web applications, its versatile features make it suitable for diverse project types, including desktop applications. By integrating "Spring Boot" with JavaFX, the system benefits from enhanced data flow and communication between frontend and backend components. This streamlined approach not only accelerates development but also simplifies maintenance and ensures the scalability of the desktop application.
-
-Moreover, leveraging Spring Data JPA simplifies database operations by providing powerful abstractions and reducing boilerplate code. Integrating JasperReports facilitates seamless generation of PDF documents, enhancing the system's reporting capabilities. Overall, this combination of technologies ensures a modern, efficient, and scalable solution for the development of the desktop application.
 ## Images:
 Here are some screenshots of the working system. The data is censored.
 <div style="display: flex; flex-wrap: wrap;">
@@ -55,13 +60,4 @@ Before proceeding with the installation steps, you must have the following prere
 
   <h3>Instalation Steps:</h3>
 
-1. Go to the final release: https://github.com/aleberh23/member-management-system/releases/tag/final.
-2. Download the .zip file called: "release.1.1.final".
-3. Extract the compressed file.
-4. Inside the folder 'database' you have the test database backup, and a .bat script, here you have two options.
-    - Execute the script, this will automatically create the DB called 'bomberos_socios', then executes the command pg_restore to restore the backup to the new DB, and finally changes the password for the user 'postgres' to 'postgres'.
-    - Do this process manually, by creating the DB "bomberos_socios" in pg_admin or by command line, restoring the DB backup called "bomberos_socios_ghubtest.sql", and finally changing the password of postgres user to 'postgres'.
-5. Open the .exe file of the system located in the root directory of the .zip archive.
-6. Login screen should appear after about 10 seconds, the user is 'test' and the password '123'.
-7. Now the system is ready to use!
 
