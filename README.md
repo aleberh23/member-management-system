@@ -13,9 +13,10 @@ As "secondary points" we have:
 • Category change suggestion alerts.
 
 Main members:
-This are the ones that paid the month bill, this type of member can have adherent members associated and debts in their name.
+These are the ones that paid the month bill, this type of member can have adherent members associated and debts in their name.
 
 Categories: 
+The client asked for 6 categories, each with a monthly fee and a set of conditions that the main member must meet to belong. (It is important to clarify that the user can select any category, but the system will display alerts with suggestions for change if the conditions are not met or if there is a more suitable category for the main member's profile.) These are:
 • Individual | Individual :  The main member must not have any additional members.
 • Grupo Familiar (Menores) | Family Group (Minors) : The main member must have at least one adherent member of type "Hijo/a" (son/daughter) who is a minor.
 • Grupo Familiar (Mayores) | Family Group (Majors): The main member must have at least one adherent member of type "Hijo/a" (son/daughter) who is 18 years old or older.
